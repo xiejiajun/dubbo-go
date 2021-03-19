@@ -18,18 +18,24 @@ package getty
 
 import (
 	"context"
+	"reflect"
+	"testing"
+	"time"
+)
+
+import (
 	hessian "github.com/apache/dubbo-go-hessian2"
+	"github.com/stretchr/testify/assert"
+)
+
+import (
 	"github.com/apache/dubbo-go/common"
-	. "github.com/apache/dubbo-go/common/constant"
+	"github.com/apache/dubbo-go/common/constant"
 	"github.com/apache/dubbo-go/common/proxy/proxy_factory"
 	"github.com/apache/dubbo-go/protocol"
 	"github.com/apache/dubbo-go/protocol/dubbo/impl"
 	"github.com/apache/dubbo-go/protocol/invocation"
 	"github.com/apache/dubbo-go/remoting"
-	"github.com/stretchr/testify/assert"
-	"reflect"
-	"testing"
-	"time"
 )
 
 func TestTCPPackageHandle(t *testing.T) {
@@ -41,15 +47,16 @@ func TestTCPPackageHandle(t *testing.T) {
 
 func testDecodeTCPPackage(t *testing.T, svr *Server, client *Client) {
 	request := remoting.NewRequest("2.0.2")
-	up := &UserProvider{}
-	invocation := createInvocation("GetUser", nil, nil, []interface{}{[]interface{}{"1", "username"}},
-		[]reflect.Value{reflect.ValueOf([]interface{}{"1", "username"}), reflect.ValueOf(up)})
-	attachment := map[string]string{INTERFACE_KEY: "com.dubbogo.user.UserProvider",
-		PATH_KEY:    "UserProvider",
-		VERSION_KEY: "1.0.0",
+	ap := &AdminProvider{}
+	rpcInvocation := createInvocation("GetAdmin", nil, nil, []interface{}{[]interface{}{"1", "username"}},
+		[]reflect.Value{reflect.ValueOf([]interface{}{"1", "username"}), reflect.ValueOf(ap)})
+	attachment := map[string]string{
+		constant.INTERFACE_KEY: "com.ikurento.user.AdminProvider",
+		constant.PATH_KEY:      "AdminProvider",
+		constant.VERSION_KEY:   "1.0.0",
 	}
-	setAttachment(invocation, attachment)
-	request.Data = invocation
+	setAttachment(rpcInvocation, attachment)
+	request.Data = rpcInvocation
 	request.Event = false
 	request.TwoWay = false
 
@@ -72,13 +79,12 @@ func testDecodeTCPPackage(t *testing.T, svr *Server, client *Client) {
 }
 
 func getServer(t *testing.T) (*Server, *common.URL) {
-
 	hessian.RegisterPOJO(&User{})
 	remoting.RegistryCodec("dubbo", &DubboTestCodec{})
 
-	methods, err := common.ServiceMap.Register("com.dubbogo.user.UserProvider", "dubbo", "", "", &UserProvider{})
+	methods, err := common.ServiceMap.Register("com.ikurento.user.AdminProvider", "dubbo", "", "", &AdminProvider{})
 	assert.NoError(t, err)
-	assert.Equal(t, "GetBigPkg,GetUser,GetUser0,GetUser1,GetUser2,GetUser3,GetUser4,GetUser5,GetUser6", methods)
+	assert.Equal(t, "GetAdmin", methods)
 
 	// config
 	SetClientConf(ClientConfig{
@@ -122,15 +128,15 @@ func getServer(t *testing.T) (*Server, *common.URL) {
 		}})
 	assert.NoError(t, srvConf.CheckValidity())
 
-	url, err := common.NewURL("dubbo://127.0.0.1:20061/com.dubbogo.user.UserProvider?anyhost=true&" +
+	url, err := common.NewURL("dubbo://127.0.0.1:20061/com.ikurento.user.AdminProvider?anyhost=true&" +
 		"application=BDTService&category=providers&default.timeout=10000&dubbo=dubbo-provider-golang-1.0.0&" +
-		"environment=dev&interface=com.ikurento.user.UserProvider&ip=127.0.0.1&methods=GetUser%2C&" +
+		"environment=dev&interface=com.ikurento.user.AdminProvider&ip=127.0.0.1&methods=GetAdmin%2C&" +
 		"module=dubbogo+user-info+server&org=ikurento.com&owner=ZX&pid=1447&revision=0.0.1&" +
-		"side=provider&timeout=3000&timestamp=1556509797245&bean.name=UserProvider")
+		"side=provider&timeout=3000&timestamp=1556509797245&bean.name=AdminProvider")
 	assert.NoError(t, err)
 	// init server
-	userProvider := &UserProvider{}
-	_, err = common.ServiceMap.Register("", url.Protocol, "", "0.0.1", userProvider)
+	adminProvider := &AdminProvider{}
+	_, err = common.ServiceMap.Register("com.ikurento.user.AdminProvider", url.Protocol, "", "0.0.1", adminProvider)
 	assert.NoError(t, err)
 	invoker := &proxy_factory.ProxyInvoker{
 		BaseInvoker: *protocol.NewBaseInvoker(url),
@@ -151,4 +157,17 @@ func getServer(t *testing.T) (*Server, *common.URL) {
 	time.Sleep(time.Second * 2)
 
 	return server, url
+}
+
+type AdminProvider struct {
+}
+
+func (a *AdminProvider) GetAdmin(ctx context.Context, req []interface{}, rsp *User) error {
+	rsp.Id = req[0].(string)
+	rsp.Name = req[1].(string)
+	return nil
+}
+
+func (a *AdminProvider) Reference() string {
+	return "AdminProvider"
 }
