@@ -115,6 +115,7 @@ func NewClient(url *common.URL) (*Client, error) {
 
 	key := url.GetParam(constant.BEAN_NAME_KEY, "")
 	impl := config.GetConsumerService(key)
+	// TODO 生成客户端动态代理
 	invoker := getInvoker(impl, conn)
 
 	return &Client{
@@ -126,6 +127,7 @@ func NewClient(url *common.URL) (*Client, error) {
 func getInvoker(impl interface{}, conn *grpc.ClientConn) interface{} {
 	var in []reflect.Value
 	in = append(in, reflect.ValueOf(conn))
+	// TODO 通过用户实现的的Consumer的GetDubboStub方法获取代理执行器（protobuf生产的client结构体)
 	method := reflect.ValueOf(impl).MethodByName("GetDubboStub")
 	res := method.Call(in)
 	return res[0].Interface()

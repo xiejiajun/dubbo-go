@@ -109,6 +109,9 @@ func (gi *GrpcInvoker) Invoke(ctx context.Context, invocation protocol.Invocatio
 	in = append(in, invocation.ParameterValues()...)
 
 	methodName := invocation.MethodName()
+	// TODO 执行代理方法(client.invoker得到的是gRpc protobuf生成的client，所以这里的方法调用最终是调用gRpc client端的方法),
+	//  这就会向远程服务发起调用, 所以dubbo grpc方式是对gRpc做了一层调用封装（服务治理)
+	//  调用到gRpc具体的接口时，服务端那边会根据SetProxyImpl方法设置的具体实现得到用户实现的Provider，然后进行调用，整条链路就串起来了
 	method := gi.client.invoker.MethodByName(methodName)
 	res := method.Call(in)
 
