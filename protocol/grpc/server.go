@@ -133,6 +133,7 @@ func waitGrpcExporter(providerServices map[string]*config.ServiceConfig) {
 // registerService SetProxyImpl invoker and grpc service
 func registerService(providerServices map[string]*config.ServiceConfig, server *grpc.Server) {
 	for key, providerService := range providerServices {
+		// TODO 由用户通过config.SetProviderService函数配置, 这里拿到的Service将是用户开发的的Provider
 		service := config.GetProviderService(key)
 
 		ds, ok := service.(DubboGrpcService)
@@ -140,6 +141,8 @@ func registerService(providerServices map[string]*config.ServiceConfig, server *
 			panic("illegal service type registered")
 		}
 
+		// TODO grpc应用层协议独有的方法SetProxyImpl，由dubbo protobuf插件
+		//  (dubbo-go/protocol/grpc/protoc-gen-dubbo/plugin/dubbo/dubbo.go)自动生成
 		m, ok := reflect.TypeOf(service).MethodByName("SetProxyImpl")
 		if !ok {
 			panic("method SetProxyImpl is necessary for grpc service")
@@ -156,6 +159,7 @@ func registerService(providerServices map[string]*config.ServiceConfig, server *
 		}
 		in := []reflect.Value{reflect.ValueOf(service)}
 		in = append(in, reflect.ValueOf(invoker))
+		// TODO 调用SetProxyImpl设置gRpc内部的代理具体实现(用户开发的Provider)
 		m.Func.Call(in)
 
 		server.RegisterService(ds.ServiceDesc(), service)
