@@ -35,5 +35,7 @@ func GetProtocol(name string) protocol.Protocol {
 	if protocols[name] == nil {
 		panic("protocol for " + name + " is not existing, make sure you have import the package.")
 	}
+	// TODO 获取协议实现，每种协议(dubbo / grpc /jsonrpc ...)等都通过init函数调用了SetProtocol函数进行协议注册, 所以consumer可以根据
+	//  reference config中protocol配置的协议拿到具体的协议实现
 	return protocols[name]()
 }

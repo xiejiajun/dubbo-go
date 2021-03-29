@@ -173,6 +173,7 @@ func (c *Client) Close() {
 }
 
 // send request
+// dubbo 协议请求发送
 func (c *Client) Request(request *remoting.Request, timeout time.Duration, response *remoting.PendingResponse) error {
 	_, session, err := c.selectSession(c.addr)
 	if err != nil {

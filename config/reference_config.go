@@ -90,6 +90,7 @@ func (c *ReferenceConfig) UnmarshalYAML(unmarshal func(interface{}) error) error
 }
 
 // Refer ...
+// TODO 由config.loadConsumerConfig 和config.GenericLoad(范化调用方式的入口)进行加载
 func (c *ReferenceConfig) Refer(_ interface{}) {
 	cfgURL := common.NewURLWithOptions(
 		common.WithPath(c.InterfaceName),
@@ -132,11 +133,13 @@ func (c *ReferenceConfig) Refer(_ interface{}) {
 	}
 
 	if len(c.urls) == 1 {
+		// TODO 获取协议实现作为具体的invoker
 		c.invoker = extension.GetProtocol(c.urls[0].Protocol).Refer(c.urls[0])
 	} else {
 		invokers := make([]protocol.Invoker, 0, len(c.urls))
 		var regUrl *common.URL
 		for _, u := range c.urls {
+			// TODO 获取协议实现作为具体的invoker
 			invokers = append(invokers, extension.GetProtocol(u.Protocol).Refer(u))
 			if u.Protocol == constant.REGISTRY_PROTOCOL {
 				regUrl = u
@@ -163,6 +166,7 @@ func (c *ReferenceConfig) Refer(_ interface{}) {
 		// If 'zone-aware' policy select, the invoker wrap sequence would be:
 		// ZoneAwareClusterInvoker(StaticDirectory) ->
 		// FailoverClusterInvoker(RegistryDirectory, routing happens here) -> Invoker
+		// TODO 集群模式
 		c.invoker = cluster.Join(directory.NewStaticDirectory(invokers))
 	}
 	// publish consumer metadata

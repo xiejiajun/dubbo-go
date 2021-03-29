@@ -108,6 +108,7 @@ func (client *ExchangeClient) GetActiveNumber() uint32 {
 	return client.activeNum.Load()
 }
 
+// dubbo协议 consumer发起请求
 // two way request
 func (client *ExchangeClient) Request(invocation *protocol.Invocation, url *common.URL, timeout time.Duration,
 	result *protocol.RPCResult) error {
@@ -122,8 +123,10 @@ func (client *ExchangeClient) Request(invocation *protocol.Invocation, url *comm
 	rsp := NewPendingResponse(request.ID)
 	rsp.response = NewResponse(request.ID, "2.0.2")
 	rsp.Reply = (*invocation).Reply()
+	// TODO 将本次调用的response对象放到队列列表有dubbo监听服务端响应进行解析填充
 	AddPendingResponse(rsp)
 
+	// TODO 只发起请求和监听rsp是否完成，接收rsp数据的逻辑在另外的地方完成
 	err := client.client.Request(request, timeout, rsp)
 	// request error
 	if err != nil {
@@ -164,6 +167,7 @@ func (client *ExchangeClient) AsyncRequest(invocation *protocol.Invocation, url 
 	return nil
 }
 
+// dubbo协议 consumer发起请求
 // oneway request
 func (client *ExchangeClient) Send(invocation *protocol.Invocation, url *common.URL, timeout time.Duration) error {
 	if er := client.doInit(url); er != nil {

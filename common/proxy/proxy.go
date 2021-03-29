@@ -204,6 +204,7 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 				}
 			}
 
+			// TODO 发起远程调用(层层追溯上去可以找到p.invoke为具体的Protocol实现，比如grpc / dubbo /jsonrpc）
 			result := p.invoke.Invoke(invCtx, inv)
 			err = result.Error()
 			if err != nil {
@@ -236,6 +237,8 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 			methodName = t.Name
 		}
 		f := valueOfElem.Field(i)
+		// TODO 为将要调用的服务(例如：dubbo-go-samples/helloworld/go-client/pkg/user.go:UserProvider)的每一个Func属性都创建动态代理，
+		//  并通过reflect.Value.Set函数用创建的动态代理对象替换掉这些Func
 		if f.Kind() == reflect.Func && f.IsValid() && f.CanSet() {
 			outNum := t.Type.NumOut()
 
@@ -257,6 +260,7 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 			}
 
 			// do method proxy here:
+			// TODO 通过reflect.MakeFunc实现动态代理， 类似Java的动态代理实现方案
 			f.Set(reflect.MakeFunc(f.Type(), makeDubboCallProxy(methodName, funcOuts)))
 			logger.Debugf("set method [%s]", methodName)
 		}

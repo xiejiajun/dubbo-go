@@ -88,6 +88,16 @@ func (di *DubboInvoker) getClient() *remoting.ExchangeClient {
 }
 
 // Invoke call remoting.
+// dubbo-go客户端调用链路：
+//  1.初始化： xxxProtocol里面的init函数 -> extension.SetProtocol -> ...  ->
+//    config.loadConsumerConfig / config.GenericLoad(范化调用方式的入口) -> config.Refer -> ... ->
+//    proxy_factory.DefaultProxyFactory.GetProxy / GetAsyncProxy -> proxy.NewProxy -> ...
+//    -> proxy.DefaultProxyImplementFunc -> ... -> reflect.MakeFunc创建动态代理并通过reflect.Value.Set函数
+//      用创建的动态代理对象替换掉这些接口的Func
+//  2. 发起调用：Consumer.具体方法 -> 实际调用到proxy.DefaultProxyImplementFunc里面创建的makeDubboCallProxy代理函数
+
+// 请求发起的链路为：DubboInvoker.Invoke -> remoting.ExchangeClient.Send/Request... -> getty.Client.Request
+//   -> getty.Client.transfer() -> 序列化... -> net.Conn 通过Socket发送数据
 func (di *DubboInvoker) Invoke(ctx context.Context, invocation protocol.Invocation) protocol.Result {
 	var (
 		err    error
