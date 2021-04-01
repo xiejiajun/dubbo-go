@@ -59,6 +59,8 @@ func (invoker *failoverClusterInvoker) Invoke(ctx context.Context, invocation pr
 	// TODO 当 invokers长度为0时，有可能时还没初始化完成，需要等待一下，我这里使用IsAvailable不太合适，
 	//  应该另外加一个IsStarted方法来表示dubbo是否初始化完成，否则当ConsumerConfig的check设置为false的时候第一次调用接口大概率会报错
 	//  对于DubboInvoker/ GrpcInvoker的Invoke方法也应该做这个判断，或者在proxy的DefaultProxyImplementFunc里面统一做这个判断？
+	//  当然，一段事件后的接口调用可以正常进行（因为异步初始化已经完成), 或者将check强制设置为true或者不设置也可以保证config.Load函数执行结束后
+	//  如果Rpc服务可用的话一定初始化完成，不可用直接panic退出
 	//if len(invokers) == 0 {
 	//	var count int
 	//	maxWait := 3
