@@ -19,8 +19,10 @@ package proxy
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"sync"
+	"time"
 )
 
 import (
@@ -203,6 +205,8 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 					inv.SetAttachments(k, value)
 				}
 			}
+			// TODO 尽量等待dubbo初始化完成
+			ensureStarted(p.invoke)
 
 			// TODO 发起远程调用(层层追溯上去可以找到p.invoke为具体的Protocol实现，比如grpc / dubbo /jsonrpc）
 			result := p.invoke.Invoke(invCtx, inv)
@@ -266,4 +270,23 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 		}
 	}
 
+}
+
+func ensureStarted(invoker protocol.Invoker) {
+	var count int
+	maxWait := 3
+	for {
+		// TODO 这里用IsAvailable判断是否初始化完成是不可取的(因为Service注销这里也会变为false)，我们应该为Invoker接口新增一个IsStarted方法用于判断服务是否初始化完成
+		//  （或者借助sync.Cond来保证接口config.Load函数执行玩之后dubbogo一定初始化完成?)
+		if invoker.IsAvailable() {
+			break
+		}
+		if count > maxWait {
+			errMsg := fmt.Sprintf("Failed to check the status of the service %v . No provider available for the service to the consumer use dubbo version %v", refconfig.InterfaceName, constant.Version)
+			logger.Error(errMsg)
+			break
+		}
+		time.Sleep(time.Second * 1)
+		count++
+	}
 }
