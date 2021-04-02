@@ -206,7 +206,7 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 				}
 			}
 			// TODO 尽量等待dubbo初始化完成
-			ensureStarted(p.invoke)
+			ensureStarted(p.invoke, methodName)
 
 			// TODO 发起远程调用(层层追溯上去可以找到p.invoke为具体的Protocol实现，比如grpc / dubbo /jsonrpc）
 			result := p.invoke.Invoke(invCtx, inv)
@@ -272,7 +272,7 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 
 }
 
-func ensureStarted(invoker protocol.Invoker) {
+func ensureStarted(invoker protocol.Invoker, methodName string) {
 	var count int
 	maxWait := 3
 	for {
@@ -282,7 +282,7 @@ func ensureStarted(invoker protocol.Invoker) {
 			break
 		}
 		if count > maxWait {
-			errMsg := fmt.Sprintf("Failed to check the status of the service %v . No provider available for the service to the consumer use dubbo version %v", refconfig.InterfaceName, constant.Version)
+			errMsg := fmt.Sprintf("Failed to check the status of the service %v . No provider available for the service to the consumer use dubbo version %v", methodName, constant.Version)
 			logger.Error(errMsg)
 			break
 		}
