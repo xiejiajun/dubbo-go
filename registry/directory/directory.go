@@ -130,8 +130,10 @@ func (dir *RegistryDirectory) refreshInvokers(event *registry.ServiceEvent) {
 
 	var oldInvoker protocol.Invoker
 	if event != nil {
+		// TODO 监听ZK事件，动态注册/注销RPC接口
 		oldInvoker, _ = dir.cacheInvokerByEvent(event)
 	}
+	// TODO 加载最新Invoker列表
 	dir.setNewInvokers()
 	if oldInvoker != nil {
 		oldInvoker.Destroy()
