@@ -53,6 +53,7 @@ func ValidateZookeeperClient(container ZkClientFacade, zkName string) error {
 	lock.Lock()
 	defer lock.Unlock()
 
+	// TODO 这里的ZkClient是否会超时异常退出导致不能正常监听Rpc接口注册/注销事件
 	if container.ZkClient() == nil {
 		// in dubbo, every registry only connect one node, so this is []string{r.Address}
 		timeout, paramErr := time.ParseDuration(url.GetParam(constant.REGISTRY_TIMEOUT_KEY, constant.DEFAULT_REG_TIMEOUT))
