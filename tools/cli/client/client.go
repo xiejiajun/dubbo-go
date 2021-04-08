@@ -151,16 +151,19 @@ func (t *TelnetClient) processSingleRequest(req *protocol.Request, userPkg inter
 			log.Println("request timeout to:", t.tcpAddr)
 			return
 		case request := <-requestDataChannel:
+			// TODO 通过Socket发送请求数据到服务端
 			if _, err := t.conn.Write(request); nil != err {
 				log.Fatalf("Error occured while writing to TCP socket: %v\n", err)
 			}
 		case response := <-responseDataChannel:
+			// TODO 读取接口调用结果
 			rspPkg, _, err := t.proto.Read(response, t.pendingResponses)
 			if err != nil {
 				log.Fatalln("Error with protocol Read(): ", err)
 			}
 			t.removePendingResponse(seqId)
 			log.Printf("After %dms , Got Rsp:", time.Now().Sub(startTime).Milliseconds())
+			// TODO 打印结果
 			common.PrintInterface(rspPkg)
 			if t.waitNum.Sub(0) == 0 {
 				return

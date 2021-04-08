@@ -66,7 +66,9 @@ func checkParam() {
 func main() {
 	flag.Parse()
 	checkParam()
+	// TODO 从json文件中反序列化得到请求结构体
 	reqPkg := json_register.RegisterStructFromFile(sendObjFilePath)
+	// TODO 从json文件中反序列化得到响应结构体
 	recvPkg := json_register.RegisterStructFromFile(recvObjFilePath)
 
 	t, err := client.NewTelnetClient(host, port, protocolName, InterfaceID, version, group, method, reqPkg, timeout)

@@ -81,6 +81,7 @@ func (p *DubboPackage) Marshal() (*bytes.Buffer, error) {
 
 // Unmarshal decodes hessian package.
 // byte -> DubboPackage
+// TODO 解析hessian格式的数据包, 将byte数组解析为DubboPackage
 func (p *DubboPackage) Unmarshal(buf *bytes.Buffer, pendingRsp *sync.Map) error {
 	bufLen := buf.Len()
 	if bufLen < hessian.HEADER_LENGTH {
