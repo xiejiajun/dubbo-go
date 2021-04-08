@@ -38,6 +38,7 @@ func RegisterStructFromFile(path string) interface{} {
 	if path == "" {
 		return nil
 	}
+	// TODO 底层的jsonStructParser.json2Struct会利用golang反射根据json字符串动态创建结构体pkg
 	pair, pkg, err := jparser.File2Interface(path)
 	log.Printf("Created pkg: \n")
 	common.PrintInterface(pkg)
@@ -46,14 +47,18 @@ func RegisterStructFromFile(path string) interface{} {
 		return nil
 	}
 	for _, v := range pair {
+		// TODO 注册内部的SubObj
 		hessian.RegisterPOJOMapping(v.JavaClassName, v.Obj)
 	}
+	// TODO 注册最外层的Obj
 	hessian.RegisterPOJOMapping(getJavaClassName(pkg), pkg)
 	return pkg
 }
 
 func getJavaClassName(pkg interface{}) string {
+	// TODO 获取pkg指针指向的元素
 	val := reflect.ValueOf(pkg).Elem()
+	// TODO 获取类型指针指向的真实类型
 	typ := reflect.TypeOf(pkg).Elem()
 	nums := val.NumField()
 	for i := 0; i < nums; i++ {
