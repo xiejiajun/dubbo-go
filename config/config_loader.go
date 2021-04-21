@@ -162,6 +162,8 @@ func loadConsumerConfig() {
 	for {
 		checkok := true
 		for _, refconfig := range consumerConfig.References {
+			// TODO refconfig.Check未配置或者配置为true时,等待接口初始化完成(强制等待从注册中心拉取接口元数据完成)
+			//   保证后面的调用成功
 			if (refconfig.Check != nil && *refconfig.Check) ||
 				(refconfig.Check == nil && consumerConfig.Check != nil && *consumerConfig.Check) ||
 				(refconfig.Check == nil && consumerConfig.Check == nil) { // default to true
