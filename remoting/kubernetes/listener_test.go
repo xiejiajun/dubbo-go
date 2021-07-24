@@ -27,7 +27,7 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 var changedData = `
@@ -69,8 +69,7 @@ func (m *mockDataListener) DataChange(eventType remoting.Event) bool {
 }
 
 func TestListener(t *testing.T) {
-
-	var tests = []struct {
+	tests := []struct {
 		input struct {
 			k string
 			v string

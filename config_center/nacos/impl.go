@@ -24,16 +24,17 @@ import (
 
 import (
 	gxset "github.com/dubbogo/gost/container/set"
+	nacosClient "github.com/dubbogo/gost/database/kv/nacos"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	perrors "github.com/pkg/errors"
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/parser"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/parser"
 )
 
 const (
@@ -53,7 +54,7 @@ type nacosDynamicConfiguration struct {
 	wg           sync.WaitGroup
 	cltLock      sync.Mutex
 	done         chan struct{}
-	client       *NacosClient
+	client       *nacosClient.NacosConfigClient
 	keyListeners sync.Map
 	parser       parser.ConfigurationParser
 }
@@ -66,13 +67,12 @@ func newNacosDynamicConfiguration(url *common.URL) (*nacosDynamicConfiguration, 
 	}
 	err := ValidateNacosClient(c, WithNacosName(nacosClientName))
 	if err != nil {
-		logger.Errorf("nacos client start error ,error message is %v", err)
+		logger.Errorf("nacos configClient start error ,error message is %v", err)
 		return nil, err
 	}
 	c.wg.Add(1)
 	go HandleClientRestart(c)
 	return c, err
-
 }
 
 // AddListener Add listener
@@ -97,15 +97,13 @@ func (n *nacosDynamicConfiguration) GetInternalProperty(key string, opts ...conf
 
 // PublishConfig will publish the config with the (key, group, value) pair
 func (n *nacosDynamicConfiguration) PublishConfig(key string, group string, value string) error {
-
 	group = n.resolvedGroup(group)
 
-	ok, err := (*n.client.Client()).PublishConfig(vo.ConfigParam{
+	ok, err := n.client.Client().PublishConfig(vo.ConfigParam{
 		DataId:  key,
 		Group:   group,
 		Content: value,
 	})
-
 	if err != nil {
 		return perrors.WithStack(err)
 	}
@@ -118,7 +116,7 @@ func (n *nacosDynamicConfiguration) PublishConfig(key string, group string, valu
 // GetConfigKeysByGroup will return all keys with the group
 func (n *nacosDynamicConfiguration) GetConfigKeysByGroup(group string) (*gxset.HashSet, error) {
 	group = n.resolvedGroup(group)
-	page, err := (*n.client.Client()).SearchConfig(vo.SearchConfigParm{
+	page, err := n.client.Client().SearchConfig(vo.SearchConfigParam{
 		Search: "accurate",
 		Group:  group,
 		PageNo: 1,
@@ -128,7 +126,7 @@ func (n *nacosDynamicConfiguration) GetConfigKeysByGroup(group string) (*gxset.H
 
 	result := gxset.NewSet()
 	if err != nil {
-		return result, perrors.WithMessage(err, "can not find the client config")
+		return result, perrors.WithMessage(err, "can not find the configClient config")
 	}
 	for _, itm := range page.PageItems {
 		result.Add(itm.DataId)
@@ -142,7 +140,7 @@ func (n *nacosDynamicConfiguration) GetRule(key string, opts ...config_center.Op
 	for _, opt := range opts {
 		opt(tmpOpts)
 	}
-	content, err := (*n.client.Client()).GetConfig(vo.ConfigParam{
+	content, err := n.client.Client().GetConfig(vo.ConfigParam{
 		DataId: key,
 		Group:  n.resolvedGroup(tmpOpts.Group),
 	})
@@ -164,29 +162,29 @@ func (n *nacosDynamicConfiguration) SetParser(p parser.ConfigurationParser) {
 }
 
 // NacosClient Get Nacos Client
-func (n *nacosDynamicConfiguration) NacosClient() *NacosClient {
+func (n *nacosDynamicConfiguration) NacosClient() *nacosClient.NacosConfigClient {
 	return n.client
 }
 
 // SetNacosClient Set Nacos Client
-func (n *nacosDynamicConfiguration) SetNacosClient(client *NacosClient) {
+func (n *nacosDynamicConfiguration) SetNacosClient(client *nacosClient.NacosConfigClient) {
 	n.cltLock.Lock()
 	n.client = client
 	n.cltLock.Unlock()
 }
 
-// WaitGroup for wait group control, zk client listener & zk client container
+// WaitGroup for wait group control, zk configClient listener & zk configClient container
 func (n *nacosDynamicConfiguration) WaitGroup() *sync.WaitGroup {
 	return &n.wg
 }
 
-// GetDone For nacos client control	RestartCallBack() bool
+// GetDone For nacos configClient control	RestartCallBack() bool
 func (n *nacosDynamicConfiguration) GetDone() chan struct{} {
 	return n.done
 }
 
-// GetUrl Get Url
-func (n *nacosDynamicConfiguration) GetUrl() *common.URL {
+// GetURL Get URL
+func (n *nacosDynamicConfiguration) GetURL() *common.URL {
 	return n.url
 }
 
@@ -217,11 +215,7 @@ func (n *nacosDynamicConfiguration) IsAvailable() bool {
 }
 
 func (n *nacosDynamicConfiguration) closeConfigs() {
-	n.cltLock.Lock()
-	client := n.client
-	n.client = nil
-	n.cltLock.Unlock()
-	// Close the old client first to close the tmp node
-	client.Close()
-	logger.Infof("begin to close provider n client")
+	// Close the old configClient first to close the tmp node
+	n.client.Close()
+	logger.Infof("begin to close provider n configClient")
 }

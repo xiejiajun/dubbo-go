@@ -23,19 +23,18 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/registry"
-	"github.com/apache/dubbo-go/registry/servicediscovery/synthesizer"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/registry"
+	"dubbo.apache.org/dubbo-go/v3/registry/servicediscovery/synthesizer"
 )
 
 func init() {
 	synthesizer.AddSynthesizer(NewRestSubscribedURLsSynthesizer())
 }
 
-//SubscribedURLsSynthesizer implementation for rest protocol
-type RestSubscribedURLsSynthesizer struct {
-}
+// SubscribedURLsSynthesizer implementation for rest protocol
+type RestSubscribedURLsSynthesizer struct{}
 
 func (r RestSubscribedURLsSynthesizer) Support(subscribedURL *common.URL) bool {
 	return "rest" == subscribedURL.Protocol

@@ -24,9 +24,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/observer"
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/observer"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 func init() {
@@ -69,7 +69,7 @@ func (e *ServiceEvent) Key() string {
 	if len(e.key) > 0 {
 		return e.key
 	}
-	e.key = e.Service.Key()
+	e.key = e.Service.GetCacheInvokerMapKey()
 	return e.key
 }
 

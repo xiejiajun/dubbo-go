@@ -27,8 +27,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
 )
 
 // MockRegistry is used as mock registry
@@ -71,7 +71,7 @@ func (r *MockRegistry) IsAvailable() bool {
 }
 
 // nolint
-func (r *MockRegistry) GetUrl() *common.URL {
+func (r *MockRegistry) GetURL() *common.URL {
 	return nil
 }
 
@@ -141,7 +141,6 @@ func (l *listener) Next() (*ServiceEvent, error) {
 }
 
 func (*listener) Close() {
-
 }
 
 // nolint

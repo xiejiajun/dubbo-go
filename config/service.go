@@ -18,7 +18,7 @@
 package config
 
 import (
-	"github.com/apache/dubbo-go/common"
+	"dubbo.apache.org/dubbo-go/v3/common"
 )
 
 var (
@@ -44,6 +44,11 @@ func GetConsumerService(name string) common.RPCService {
 // GetProviderService gets ProviderService by @name
 func GetProviderService(name string) common.RPCService {
 	return proServices[name]
+}
+
+// GetAllProviderService gets all ProviderService
+func GetAllProviderService() map[string]common.RPCService {
+	return proServices
 }
 
 // GetCallback gets CallbackResponse by @name

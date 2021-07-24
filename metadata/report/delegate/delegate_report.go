@@ -31,12 +31,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config/instance"
-	"github.com/apache/dubbo-go/metadata/definition"
-	"github.com/apache/dubbo-go/metadata/identifier"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config/instance"
+	"dubbo.apache.org/dubbo-go/v3/metadata/definition"
+	"dubbo.apache.org/dubbo-go/v3/metadata/identifier"
 )
 
 const (
@@ -125,7 +125,6 @@ func NewMetadataReport() (*MetadataReport, error) {
 		url.GetParamInt(constant.RETRY_TIMES_KEY, defaultMetadataReportRetryTimes),
 		bmr.retry,
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +138,6 @@ func NewMetadataReport() (*MetadataReport, error) {
 				bmr.allMetadataReportsLock.RLock()
 				bmr.doHandlerMetadataCollection(bmr.allMetadataReports)
 				bmr.allMetadataReportsLock.RUnlock()
-
 			})
 		if err != nil {
 			return nil, err
@@ -148,6 +146,18 @@ func NewMetadataReport() (*MetadataReport, error) {
 		scheduler.Start()
 	}
 	return bmr, nil
+}
+
+// PublishAppMetadata delegate publish metadata info
+func (mr *MetadataReport) PublishAppMetadata(identifier *identifier.SubscriberMetadataIdentifier, info *common.MetadataInfo) error {
+	report := instance.GetMetadataReportInstance()
+	return report.PublishAppMetadata(identifier, info)
+}
+
+// GetAppMetadata delegate get metadata info
+func (mr *MetadataReport) GetAppMetadata(identifier *identifier.SubscriberMetadataIdentifier) (*common.MetadataInfo, error) {
+	report := instance.GetMetadataReportInstance()
+	return report.GetAppMetadata(identifier)
 }
 
 // retry will do metadata failed reports collection by call metadata report sdk
@@ -206,7 +216,6 @@ func (mr *MetadataReport) storeMetadataTask(role int, identifier *identifier.Met
 
 	if err != nil {
 		logger.Errorf("storeProviderMetadataTask error in stage call  metadata report to StoreProviderMetadata, msg is %+v", err)
-		panic(err)
 	}
 }
 

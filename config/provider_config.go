@@ -27,18 +27,14 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/yaml"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/yaml"
 )
-
-/////////////////////////
-// providerConfig
-/////////////////////////
 
 // ProviderConfig is the default configuration of service provider
 type ProviderConfig struct {
-	BaseConfig `yaml:",inline"`
-	configCenter
+	BaseConfig     `yaml:",inline" property:"base"`
+	configCenter   `yaml:"-"`
 	Filter         string                     `yaml:"filter" json:"filter,omitempty" property:"filter"`
 	ProxyFactory   string                     `yaml:"proxy_factory" default:"default" json:"proxy_factory,omitempty" property:"proxy_factory"`
 	Services       map[string]*ServiceConfig  `yaml:"services" json:"services,omitempty" property:"services"`

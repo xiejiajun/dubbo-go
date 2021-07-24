@@ -31,18 +31,16 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
-var (
-	srvConf *ServerConfig
-)
+var srvConf *ServerConfig
 
 func initServer(protocol string) {
 	// load clientconfig from provider_config
@@ -104,7 +102,7 @@ type Server struct {
 
 // NewServer create a new Server
 func NewServer(url *common.URL, handlers func(*invocation.RPCInvocation) protocol.RPCResult) *Server {
-	//init
+	// init
 	initServer(url.Protocol)
 
 	srvConf.SSLEnabled = url.GetParamBool(constant.SSL_ENABLED_KEY, false)

@@ -22,27 +22,21 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 // Extension - Router
 // PriorityRouterFactory creates creates priority router with url
 type PriorityRouterFactory interface {
 	// NewPriorityRouter creates router instance with URL
-	NewPriorityRouter(*common.URL, chan struct{}) (PriorityRouter, error)
-}
-
-// FilePriorityRouterFactory creates priority router with parse config file
-type FilePriorityRouterFactory interface {
-	// NewFileRouters Create file router with config file
-	NewFileRouter([]byte) (PriorityRouter, error)
+	NewPriorityRouter([]byte, []byte, chan struct{}) (PriorityRouter, error)
 }
 
 // Router
 type router interface {
 	// Route Determine the target invokers list.
-	Route(*roaring.Bitmap, Cache, *common.URL, protocol.Invocation) *roaring.Bitmap
+	Route([]protocol.Invoker, *common.URL, protocol.Invocation) []protocol.Invoker
 
 	// URL Return URL in router
 	URL() *common.URL

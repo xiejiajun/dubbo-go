@@ -22,9 +22,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
@@ -36,8 +36,7 @@ func init() {
 	extension.SetLoadbalance(LeastActive, NewLeastActiveLoadBalance)
 }
 
-type leastActiveLoadBalance struct {
-}
+type leastActiveLoadBalance struct{}
 
 // NewLeastActiveLoadBalance returns a least active load balance.
 //
@@ -68,7 +67,7 @@ func (lb *leastActiveLoadBalance) Select(invokers []protocol.Invoker, invocation
 	for i := 0; i < count; i++ {
 		invoker := invokers[i]
 		// Active number
-		active := protocol.GetMethodStatus(invoker.GetUrl(), invocation.MethodName()).GetActive()
+		active := protocol.GetMethodStatus(invoker.GetURL(), invocation.MethodName()).GetActive()
 		// current weight (maybe in warmUp)
 		weight := GetWeight(invoker, invocation)
 		// There are smaller active services

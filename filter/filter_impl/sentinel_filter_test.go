@@ -30,9 +30,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 func TestSentinelFilter_QPS(t *testing.T) {
@@ -51,7 +51,7 @@ func TestSentinelFilter_QPS(t *testing.T) {
 	_, err = flow.LoadRules([]*flow.Rule{
 		{
 			Resource: interfaceResourceName,
-			//MetricType:             flow.QPS,
+			// MetricType:             flow.QPS,
 			TokenCalculateStrategy: flow.Direct,
 			ControlBehavior:        flow.Reject,
 			Threshold:              100,

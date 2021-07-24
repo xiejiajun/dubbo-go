@@ -26,7 +26,7 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
+	"dubbo.apache.org/dubbo-go/v3/common"
 )
 
 func TestBaseInvoker(t *testing.T) {
@@ -34,7 +34,7 @@ func TestBaseInvoker(t *testing.T) {
 	assert.Nil(t, err)
 
 	ivk := NewBaseInvoker(url)
-	assert.NotNil(t, ivk.GetUrl())
+	assert.NotNil(t, ivk.GetURL())
 	assert.True(t, ivk.IsAvailable())
 	assert.False(t, ivk.IsDestroyed())
 

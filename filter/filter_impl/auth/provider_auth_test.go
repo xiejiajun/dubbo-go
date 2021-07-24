@@ -30,11 +30,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	"github.com/apache/dubbo-go/protocol/mock"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/protocol/mock"
 )
 
 func TestProviderAuthFilter_Invoke(t *testing.T) {
@@ -47,7 +47,7 @@ func TestProviderAuthFilter_Invoke(t *testing.T) {
 		"OK",
 		struct {
 			Name string
-			Id   int64
+			ID   int64
 		}{"YUYU", 1},
 	}
 	inv := invocation.NewRPCInvocation("test", parmas, nil)
@@ -70,5 +70,4 @@ func TestProviderAuthFilter_Invoke(t *testing.T) {
 	assert.Equal(t, result, filter.Invoke(context.Background(), invoker, inv))
 	url.SetParam(constant.SERVICE_AUTH_KEY, "true")
 	assert.Equal(t, result, filter.Invoke(context.Background(), invoker, inv))
-
 }

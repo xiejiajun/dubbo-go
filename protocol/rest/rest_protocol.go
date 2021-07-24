@@ -23,23 +23,21 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/rest/client"
-	_ "github.com/apache/dubbo-go/protocol/rest/client/client_impl"
-	rest_config "github.com/apache/dubbo-go/protocol/rest/config"
-	_ "github.com/apache/dubbo-go/protocol/rest/config/reader"
-	"github.com/apache/dubbo-go/protocol/rest/server"
-	_ "github.com/apache/dubbo-go/protocol/rest/server/server_impl"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/rest/client"
+	_ "dubbo.apache.org/dubbo-go/v3/protocol/rest/client/client_impl"
+	rest_config "dubbo.apache.org/dubbo-go/v3/protocol/rest/config"
+	_ "dubbo.apache.org/dubbo-go/v3/protocol/rest/config/reader"
+	"dubbo.apache.org/dubbo-go/v3/protocol/rest/server"
+	_ "dubbo.apache.org/dubbo-go/v3/protocol/rest/server/server_impl"
 )
 
-var (
-	restProtocol *RestProtocol
-)
+var restProtocol *RestProtocol
 
 const REST = "rest"
 
@@ -68,7 +66,7 @@ func NewRestProtocol() *RestProtocol {
 
 // Export export rest service
 func (rp *RestProtocol) Export(invoker protocol.Invoker) protocol.Exporter {
-	url := invoker.GetUrl()
+	url := invoker.GetURL()
 	serviceKey := url.ServiceKey()
 	exporter := NewRestExporter(serviceKey, invoker, rp.ExporterMap())
 	id := url.GetParam(constant.BEAN_NAME_KEY, "")
@@ -88,7 +86,7 @@ func (rp *RestProtocol) Export(invoker protocol.Invoker) protocol.Exporter {
 // Refer create rest service reference
 func (rp *RestProtocol) Refer(url *common.URL) protocol.Invoker {
 	// create rest_invoker
-	var requestTimeout = config.GetConsumerConfig().RequestTimeout
+	requestTimeout := config.GetConsumerConfig().RequestTimeout
 	requestTimeoutStr := url.GetParam(constant.TIMEOUT_KEY, config.GetConsumerConfig().Request_Timeout)
 	connectTimeout := config.GetConsumerConfig().ConnectTimeout
 	if t, err := time.ParseDuration(requestTimeoutStr); err == nil {

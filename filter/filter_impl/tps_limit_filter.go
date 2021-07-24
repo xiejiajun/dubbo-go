@@ -20,14 +20,15 @@ package filter_impl
 import (
 	"context"
 )
+
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/filter"
-	_ "github.com/apache/dubbo-go/filter/filter_impl/tps"
-	_ "github.com/apache/dubbo-go/filter/handler"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	_ "dubbo.apache.org/dubbo-go/v3/filter/filter_impl/tps"
+	_ "dubbo.apache.org/dubbo-go/v3/filter/handler"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
@@ -53,16 +54,15 @@ func init() {
  *   tps.limit.rejected.handler: "default", # optional, or the name of the implementation
  *   if the value of 'tps.limiter' is nil or empty string, the tps filter will do nothing
  */
-type TpsLimitFilter struct {
-}
+type TpsLimitFilter struct{}
 
 // Invoke gets the configured limter to impose TPS limiting
 func (t TpsLimitFilter) Invoke(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation) protocol.Result {
-	url := invoker.GetUrl()
+	url := invoker.GetURL()
 	tpsLimiter := url.GetParam(constant.TPS_LIMITER_KEY, "")
 	rejectedExeHandler := url.GetParam(constant.TPS_REJECTED_EXECUTION_HANDLER_KEY, constant.DEFAULT_KEY)
 	if len(tpsLimiter) > 0 {
-		allow := extension.GetTpsLimiter(tpsLimiter).IsAllowable(invoker.GetUrl(), invocation)
+		allow := extension.GetTpsLimiter(tpsLimiter).IsAllowable(invoker.GetURL(), invocation)
 		if allow {
 			return invoker.Invoke(ctx, invocation)
 		}

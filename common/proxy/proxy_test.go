@@ -30,11 +30,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/dubbo/hessian2"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/dubbo/hessian2"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 type TestService struct {
@@ -58,7 +58,6 @@ func (s *TestServiceInt) Reference() string {
 }
 
 func TestProxyImplement(t *testing.T) {
-
 	invoker := protocol.NewBaseInvoker(&common.URL{})
 	p := NewProxy(invoker, nil, map[string]string{constant.ASYNC_KEY: "false"})
 	s := &TestService{}
@@ -122,7 +121,6 @@ func TestProxyImplement(t *testing.T) {
 	s3 := &S3{TestService: *s}
 	p.Implement(s3)
 	assert.Nil(t, s3.MethodOne)
-
 }
 
 func TestProxyImplementForContext(t *testing.T) {

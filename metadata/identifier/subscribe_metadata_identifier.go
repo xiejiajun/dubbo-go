@@ -17,18 +17,32 @@
 
 package identifier
 
+import (
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+)
+
 // SubscriberMetadataIdentifier is inherit baseMetaIdentifier with service params: Revision
 type SubscriberMetadataIdentifier struct {
 	Revision string
-	MetadataIdentifier
+	BaseApplicationMetadataIdentifier
+}
+
+func NewSubscriberMetadataIdentifier(application string, revision string) *SubscriberMetadataIdentifier {
+	return &SubscriberMetadataIdentifier{
+		Revision: revision,
+		BaseApplicationMetadataIdentifier: BaseApplicationMetadataIdentifier{
+			Application: application,
+			Group:       constant.DUBBO,
+		},
+	}
 }
 
 // GetIdentifierKey returns string that format is service:Version:Group:Side:Revision
 func (mdi *SubscriberMetadataIdentifier) GetIdentifierKey() string {
-	return mdi.BaseMetadataIdentifier.getIdentifierKey(mdi.Revision)
+	return mdi.BaseApplicationMetadataIdentifier.getIdentifierKey(mdi.Revision)
 }
 
 // GetFilePathKey returns string that format is metadata/path/Version/Group/Side/Revision
 func (mdi *SubscriberMetadataIdentifier) GetFilePathKey() string {
-	return mdi.BaseMetadataIdentifier.getFilePathKey(mdi.Revision)
+	return mdi.BaseApplicationMetadataIdentifier.getFilePathKey(mdi.Revision)
 }

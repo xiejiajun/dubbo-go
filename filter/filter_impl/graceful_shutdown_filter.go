@@ -23,19 +23,19 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/filter"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 func init() {
-	var consumerFiler = &gracefulShutdownFilter{
+	consumerFiler := &gracefulShutdownFilter{
 		shutdownConfig: config.GetConsumerConfig().ShutdownConfig,
 	}
-	var providerFilter = &gracefulShutdownFilter{
+	providerFilter := &gracefulShutdownFilter{
 		shutdownConfig: config.GetProviderConfig().ShutdownConfig,
 	}
 
@@ -57,9 +57,12 @@ type gracefulShutdownFilter struct {
 func (gf *gracefulShutdownFilter) Invoke(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation) protocol.Result {
 	if gf.rejectNewRequest() {
 		logger.Info("The application is closing, new request will be rejected.")
-		return gf.getRejectHandler().RejectedExecution(invoker.GetUrl(), invocation)
+		return gf.getRejectHandler().RejectedExecution(invoker.GetURL(), invocation)
 	}
 	atomic.AddInt32(&gf.activeCount, 1)
+	if gf.shutdownConfig != nil && gf.activeCount > 0 {
+		gf.shutdownConfig.RequestsFinished = false
+	}
 	return invoker.Invoke(ctx, invocation)
 }
 

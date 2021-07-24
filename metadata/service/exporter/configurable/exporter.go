@@ -18,18 +18,17 @@
 package configurable
 
 import (
-	"context"
 	"errors"
 	"sync"
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/metadata/service"
-	"github.com/apache/dubbo-go/metadata/service/exporter"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/metadata/service"
+	"dubbo.apache.org/dubbo-go/v3/metadata/service/exporter"
 )
 
 // MetadataServiceExporter is the ConfigurableMetadataServiceExporter which implement MetadataServiceExporter interface
@@ -49,7 +48,7 @@ func NewMetadataServiceExporter(metadataService service.MetadataService) exporte
 // Export will export the metadataService
 func (exporter *MetadataServiceExporter) Export(url *common.URL) error {
 	if !exporter.IsExported() {
-		serviceConfig := config.NewServiceConfig(constant.SIMPLE_METADATA_SERVICE_NAME, context.Background())
+		serviceConfig := config.NewServiceConfig(constant.SIMPLE_METADATA_SERVICE_NAME)
 		serviceConfig.Protocol = constant.DEFAULT_PROTOCOL
 		if url == nil || url.SubURL == nil {
 			return errors.New("metadata server url is nil, pls check your configuration")
@@ -60,9 +59,11 @@ func (exporter *MetadataServiceExporter) Export(url *common.URL) error {
 				Port: url.SubURL.Port,
 			},
 		}
+		serviceConfig.Registry = "N/A"
 		serviceConfig.InterfaceName = constant.METADATA_SERVICE_NAME
 		// identify this is a golang server
 		serviceConfig.Params = map[string]string{}
+
 		serviceConfig.Group = config.GetApplicationConfig().Name
 		// now the error will always be nil
 		serviceConfig.Version, _ = exporter.metadataService.Version()

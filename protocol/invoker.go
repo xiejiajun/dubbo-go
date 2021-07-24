@@ -27,8 +27,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
 )
 
 var (
@@ -41,7 +41,7 @@ var (
 )
 
 // Invoker the service invocation interface for the consumer
-//go:generate mockgen -source invoker.go -destination mock/mock_invoker.go  -self_package github.com/apache/dubbo-go/protocol/mock --package mock  Invoker
+//go:generate mockgen -source invoker.go -destination mock/mock_invoker.go -self_package dubbo.apache.org/dubbo-go/v3/protocol/mock --package mock Invoker
 // Extension - Invoker
 type Invoker interface {
 	common.Node
@@ -71,8 +71,8 @@ func NewBaseInvoker(url *common.URL) *BaseInvoker {
 	return ivk
 }
 
-// GetUrl gets base invoker URL
-func (bi *BaseInvoker) GetUrl() *common.URL {
+// GetURL gets base invoker URL
+func (bi *BaseInvoker) GetURL() *common.URL {
 	return bi.url
 }
 
@@ -93,7 +93,7 @@ func (bi *BaseInvoker) Invoke(context context.Context, invocation Invocation) Re
 
 // Destroy changes available and destroyed flag
 func (bi *BaseInvoker) Destroy() {
-	logger.Infof("Destroy invoker: %s", bi.GetUrl())
+	logger.Infof("Destroy invoker: %s", bi.GetURL())
 	bi.destroyed.Store(true)
 	bi.available.Store(false)
 }

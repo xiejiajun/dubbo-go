@@ -20,7 +20,6 @@ package logger
 import (
 	"flag"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 )
@@ -34,12 +33,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
 )
 
-var (
-	logger Logger
-)
+var logger Logger
 
 // nolint
 type DubboLogger struct {
@@ -72,9 +69,12 @@ func init() {
 	for len(fs.Args()) != 0 {
 		fs.Parse(fs.Args()[1:])
 	}
+	if *logConfFile == "" {
+		*logConfFile = constant.DEFAULT_LOG_CONF_FILE_PATH
+	}
 	err := InitLog(*logConfFile)
 	if err != nil {
-		log.Printf("[InitLog] warn: %v", err)
+		logger.Warnf("InitLog with error %v", err)
 	}
 }
 

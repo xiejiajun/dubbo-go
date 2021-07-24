@@ -23,9 +23,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/filter"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/filter"
 )
 
 const (
@@ -68,7 +68,6 @@ type FixedWindowTpsLimitStrategyImpl struct {
 // IsAllowable determines if the requests over the TPS limit within the interval.
 // It is not thread-safe.
 func (impl *FixedWindowTpsLimitStrategyImpl) IsAllowable() bool {
-
 	current := time.Now().UnixNano()
 	if impl.timestamp+impl.interval < current {
 		// it's a new window

@@ -29,12 +29,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/filter"
-	_ "github.com/apache/dubbo-go/filter/handler"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	_ "dubbo.apache.org/dubbo-go/v3/filter/handler"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
@@ -82,7 +82,7 @@ type ExecuteState struct {
 // Invoke judges whether the current processing requests over the threshold
 func (ef *ExecuteLimitFilter) Invoke(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation) protocol.Result {
 	methodConfigPrefix := "methods." + invocation.MethodName() + "."
-	ivkURL := invoker.GetUrl()
+	ivkURL := invoker.GetURL()
 	limitTarget := ivkURL.ServiceKey()
 	var limitRateConfig string
 
@@ -134,8 +134,10 @@ func (state *ExecuteState) decrease() {
 	atomic.AddInt64(&state.concurrentCount, -1)
 }
 
-var executeLimitOnce sync.Once
-var executeLimitFilter *ExecuteLimitFilter
+var (
+	executeLimitOnce   sync.Once
+	executeLimitFilter *ExecuteLimitFilter
+)
 
 // GetExecuteLimitFilter returns the singleton ExecuteLimitFilter instance
 func GetExecuteLimitFilter() filter.Filter {

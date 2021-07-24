@@ -20,17 +20,18 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/apache/dubbo-go/filter"
 	"strconv"
 	"time"
+
+	"dubbo.apache.org/dubbo-go/v3/filter"
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/protocol"
-	invocation_impl "github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	invocation_impl "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 func init() {
@@ -38,8 +39,7 @@ func init() {
 }
 
 // DefaultAuthenticator is the default implementation of Authenticator
-type DefaultAuthenticator struct {
-}
+type DefaultAuthenticator struct{}
 
 // Sign adds the signature to the invocation
 func (authenticator *DefaultAuthenticator) Sign(invocation protocol.Invocation, url *common.URL) error {
@@ -65,7 +65,6 @@ func (authenticator *DefaultAuthenticator) Sign(invocation protocol.Invocation, 
 // getSignature
 // get signature by the metadata and params of the invocation
 func getSignature(url *common.URL, invocation protocol.Invocation, secrectKey string, currentTime string) (string, error) {
-
 	requestString := fmt.Sprintf(constant.SIGNATURE_STRING_FORMAT,
 		url.ColonSeparatedKey(), invocation.MethodName(), secrectKey, currentTime)
 	var signature string
@@ -125,7 +124,6 @@ func GetDefaultAuthenticator() filter.Authenticator {
 }
 
 func doAuthWork(url *common.URL, do func(filter.Authenticator) error) error {
-
 	shouldAuth := url.GetParamBool(constant.SERVICE_AUTH_KEY, false)
 	if shouldAuth {
 		authenticator := extension.GetAuthenticator(url.GetParam(constant.AUTHENTICATOR_KEY, constant.DEFAULT_AUTHENTICATOR))

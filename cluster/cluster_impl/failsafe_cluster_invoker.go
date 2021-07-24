@@ -20,12 +20,13 @@ package cluster_impl
 import (
 	"context"
 )
+
 import (
-	"github.com/apache/dubbo-go/cluster"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 /**
@@ -54,11 +55,11 @@ func (invoker *failsafeClusterInvoker) Invoke(ctx context.Context, invocation pr
 		return &protocol.RPCResult{}
 	}
 
-	url := invokers[0].GetUrl()
+	url := invokers[0].GetURL()
 	methodName := invocation.MethodName()
-	//Get the service loadbalance config
+	// Get the service loadbalance config
 	lb := url.GetParam(constant.LOADBALANCE_KEY, constant.DEFAULT_LOADBALANCE)
-	//Get the service method loadbalance config if have
+	// Get the service method loadbalance config if have
 	if v := url.GetMethodParam(methodName, constant.LOADBALANCE_KEY, ""); v != "" {
 		lb = v
 	}
@@ -68,7 +69,7 @@ func (invoker *failsafeClusterInvoker) Invoke(ctx context.Context, invocation pr
 	var result protocol.Result
 
 	ivk := invoker.doSelect(loadbalance, invocation, invokers, invoked)
-	//DO INVOKE
+	// DO INVOKE
 	result = ivk.Invoke(ctx, invocation)
 	if result.Error() != nil {
 		// ignore

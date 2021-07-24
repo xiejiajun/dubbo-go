@@ -22,9 +22,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
@@ -35,8 +35,7 @@ func init() {
 	extension.SetLoadbalance(name, NewRandomLoadBalance)
 }
 
-type randomLoadBalance struct {
-}
+type randomLoadBalance struct{}
 
 // NewRandomLoadBalance returns a random load balance instance.
 //

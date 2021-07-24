@@ -27,8 +27,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 func TestGetProxy(t *testing.T) {
@@ -38,8 +38,7 @@ func TestGetProxy(t *testing.T) {
 	assert.NotNil(t, proxy)
 }
 
-type TestAsync struct {
-}
+type TestAsync struct{}
 
 func (u *TestAsync) CallBack(res common.CallbackResponse) {
 	fmt.Println("CallBack res:", res)

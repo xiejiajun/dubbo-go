@@ -18,8 +18,8 @@
 package extension
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/config_center"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
 )
 
 const (
@@ -29,9 +29,7 @@ const (
 
 type getConfiguratorFunc func(url *common.URL) config_center.Configurator
 
-var (
-	configurator = make(map[string]getConfiguratorFunc)
-)
+var configurator = make(map[string]getConfiguratorFunc)
 
 // SetConfigurator sets the getConfiguratorFunc with @name
 func SetConfigurator(name string, v getConfiguratorFunc) {
@@ -44,7 +42,6 @@ func GetConfigurator(name string, url *common.URL) config_center.Configurator {
 		panic("configurator for " + name + " is not existing, make sure you have import the package.")
 	}
 	return configurator[name](url)
-
 }
 
 // SetDefaultConfigurator sets the default Configurator
@@ -58,7 +55,6 @@ func GetDefaultConfigurator(url *common.URL) config_center.Configurator {
 		panic("configurator for default is not existing, make sure you have import the package.")
 	}
 	return configurator[DefaultKey](url)
-
 }
 
 // GetDefaultConfiguratorFunc gets default configurator function

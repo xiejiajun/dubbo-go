@@ -18,18 +18,17 @@
 package nacos
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/parser"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/parser"
 )
 
 func init() {
 	extension.SetConfigCenterFactory("nacos", func() config_center.DynamicConfigurationFactory { return &nacosDynamicConfigurationFactory{} })
 }
 
-type nacosDynamicConfigurationFactory struct {
-}
+type nacosDynamicConfigurationFactory struct{}
 
 // GetDynamicConfiguration Get Configuration with URL
 func (f *nacosDynamicConfigurationFactory) GetDynamicConfiguration(url *common.URL) (config_center.DynamicConfiguration, error) {
@@ -39,5 +38,4 @@ func (f *nacosDynamicConfigurationFactory) GetDynamicConfiguration(url *common.U
 	}
 	dynamicConfiguration.SetParser(&parser.DefaultConfigurationParser{})
 	return dynamicConfiguration, err
-
 }

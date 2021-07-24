@@ -49,8 +49,10 @@ const (
 	PORT_KEY                 = "port"
 	PROTOCOL_KEY             = "protocol"
 	PATH_SEPARATOR           = "/"
-	//DUBBO_KEY                = "dubbo"
+	// DUBBO_KEY                = "dubbo"
 	SSL_ENABLED_KEY = "ssl-enabled"
+	// PARAMS_TYPE_Key key used in pass through invoker factory, to define param type
+	PARAMS_TYPE_Key = "parameter-type-names"
 )
 
 const (
@@ -144,11 +146,15 @@ const (
 	CONFIG_VERSION_KEY    = "configVersion"
 	COMPATIBLE_CONFIG_KEY = "compatible_config"
 )
+
 const (
 	RegistryConfigPrefix       = "dubbo.registries."
 	SingleRegistryConfigPrefix = "dubbo.registry."
 	ReferenceConfigPrefix      = "dubbo.reference."
 	ServiceConfigPrefix        = "dubbo.service."
+	ConfigBasePrefix           = "dubbo.base."
+	RemotePrefix               = "dubbo.remote."
+	ServiceDiscPrefix          = "dubbo.service-discovery."
 	ProtocolConfigPrefix       = "dubbo.protocols."
 	ProviderConfigPrefix       = "dubbo.provider."
 	ConsumerConfigPrefix       = "dubbo.consumer."
@@ -199,6 +205,8 @@ const (
 	// default deregister critical server after
 	DEFAULT_DEREGISTER_TIME = "20s"
 	DEREGISTER_AFTER        = "consul-deregister-critical-service-after"
+	// PassThroughProxyFactoryKey is key of proxy factory with raw data input service
+	PassThroughProxyFactoryKey = "dubbo-raw"
 )
 
 const (
@@ -207,18 +215,8 @@ const (
 
 // Use for router module
 const (
-	// ConditionRouterName Specify file condition router name
-	ConditionRouterName = "condition"
-	// ConditionAppRouterName Specify listenable application router name
-	ConditionAppRouterName = "app"
-	// ListenableRouterName Specify listenable router name
-	ListenableRouterName = "listenable"
-	// HealthCheckRouterName Specify the name of HealthCheckRouter
-	HealthCheckRouterName = "health_check"
-	// LocalPriorityRouterName Specify the name of LocalPriorityRouter
-	LocalPriorityRouterName = "local_priority"
-	// ConnCheckRouterName Specify the name of ConnCheckRouter
-	ConnCheckRouterName = "conn_check"
+	// UniformRouterName Specifythe name of UniformRouter
+	UniformRouterName = "uniform"
 	// TagRouterName Specify the name of TagRouter
 	TagRouterName = "tag"
 	// TagRouterRuleSuffix Specify tag router suffix
@@ -227,12 +225,6 @@ const (
 	// ConditionRouterRuleSuffix Specify condition router suffix
 	ConditionRouterRuleSuffix = ".condition-router"
 
-	// Force Force key in router module
-	RouterForce = "force"
-	// Enabled Enabled key in router module
-	RouterEnabled = "enabled"
-	// Priority Priority key in router module
-	RouterPriority = "priority"
 	// RouterScope Scope key in router module
 	RouterScope = "scope"
 	// RouterApplicationScope Scope key in router module
@@ -323,12 +315,13 @@ const (
 // service discovery
 const (
 	SUBSCRIBED_SERVICE_NAMES_KEY               = "subscribed-services"
-	PROVIDER_BY                                = "provided-by"
-	EXPORTED_SERVICES_REVISION_PROPERTY_NAME   = "dubbo.exported-services.revision"
+	PROVIDED_BY                                = "provided-by"
+	EXPORTED_SERVICES_REVISION_PROPERTY_NAME   = "dubbo.metadata.revision"
 	SUBSCRIBED_SERVICES_REVISION_PROPERTY_NAME = "dubbo.subscribed-services.revision"
 	SERVICE_INSTANCE_SELECTOR                  = "service-instance-selector"
 	METADATA_STORAGE_TYPE_PROPERTY_NAME        = "dubbo.metadata.storage-type"
 	DEFAULT_METADATA_STORAGE_TYPE              = "local"
+	REMOTE_METADATA_STORAGE_TYPE               = "remote"
 	SERVICE_INSTANCE_ENDPOINTS                 = "dubbo.endpoints"
 	METADATA_SERVICE_PREFIX                    = "dubbo.metadata-service."
 	METADATA_SERVICE_URL_PARAMS_PROPERTY_NAME  = METADATA_SERVICE_PREFIX + "url-params"

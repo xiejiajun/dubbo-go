@@ -28,8 +28,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/metrics"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/metrics"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 func TestGetMetricReporter(t *testing.T) {
@@ -42,8 +42,7 @@ func TestGetMetricReporter(t *testing.T) {
 	assert.Equal(t, reporter, res)
 }
 
-type mockReporter struct {
-}
+type mockReporter struct{}
 
 // Report method for feature expansion
 func (m mockReporter) Report(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation, cost time.Duration, res protocol.Result) {

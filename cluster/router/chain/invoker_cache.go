@@ -22,9 +22,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster/router"
-	"github.com/apache/dubbo-go/cluster/router/utils"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/cluster/router"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 // Cache caches all addresses relevant info for a snapshot of received invokers. It keeps a snapshot of the received
@@ -48,7 +47,6 @@ type InvokerCache struct {
 func BuildCache(invokers []protocol.Invoker) *InvokerCache {
 	return &InvokerCache{
 		invokers:  invokers,
-		bitmap:    utils.ToBitmap(invokers),
 		pools:     make(map[string]router.AddrPool, 8),
 		metadatas: make(map[string]router.AddrMetadata, 8),
 	}

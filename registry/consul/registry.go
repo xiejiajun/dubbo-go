@@ -29,11 +29,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/registry"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/registry"
 )
 
 const (
@@ -177,8 +177,8 @@ func (r *consulRegistry) getListener(url *common.URL) (registry.Listener, error)
 	return listener, err
 }
 
-// GetUrl get registry URL of consul registry center
-func (r *consulRegistry) GetUrl() *common.URL {
+// GetURL get registry URL of consul registry center
+func (r *consulRegistry) GetURL() *common.URL {
 	return r.URL
 }
 

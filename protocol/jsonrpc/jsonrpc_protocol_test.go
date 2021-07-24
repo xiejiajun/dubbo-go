@@ -29,9 +29,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 func TestJsonrpcProtocolExport(t *testing.T) {
@@ -46,7 +46,7 @@ func TestJsonrpcProtocolExport(t *testing.T) {
 	exporter := proto.Export(protocol.NewBaseInvoker(url))
 
 	// make sure url
-	eq := exporter.GetInvoker().GetUrl().URLEqual(url)
+	eq := exporter.GetInvoker().GetURL().URLEqual(url)
 	assert.True(t, eq)
 
 	// make sure exporterMap after 'Unexport'
@@ -82,7 +82,7 @@ func TestJsonrpcProtocolRefer(t *testing.T) {
 	invoker := proto.Refer(url)
 
 	// make sure url
-	eq := invoker.GetUrl().URLEqual(url)
+	eq := invoker.GetURL().URLEqual(url)
 	assert.True(t, eq)
 
 	// make sure invokers after 'Destroy'

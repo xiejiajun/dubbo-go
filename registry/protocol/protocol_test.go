@@ -23,22 +23,23 @@ import (
 )
 
 import (
+	gxset "github.com/dubbogo/gost/container/set"
 	"github.com/stretchr/testify/assert"
 )
 
 import (
-	cluster "github.com/apache/dubbo-go/cluster/cluster_impl"
-	"github.com/apache/dubbo-go/common"
-	common_cfg "github.com/apache/dubbo-go/common/config"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/configurator"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/protocolwrapper"
-	"github.com/apache/dubbo-go/registry"
-	"github.com/apache/dubbo-go/remoting"
+	cluster "dubbo.apache.org/dubbo-go/v3/cluster/cluster_impl"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	common_cfg "dubbo.apache.org/dubbo-go/v3/common/config"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/configurator"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/protocolwrapper"
+	"dubbo.apache.org/dubbo-go/v3/registry"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 func init() {
@@ -63,7 +64,7 @@ func referNormal(t *testing.T, regProtocol *registryProtocol) {
 
 	invoker := regProtocol.Refer(url)
 	assert.IsType(t, &protocol.BaseInvoker{}, invoker)
-	assert.Equal(t, invoker.GetUrl().String(), url.String())
+	assert.Equal(t, invoker.GetURL().String(), url.String())
 }
 
 func TestRefer(t *testing.T) {
@@ -133,12 +134,11 @@ func exporterNormal(t *testing.T, regProtocol *registryProtocol) *common.URL {
 	exporter := regProtocol.Export(invoker)
 
 	assert.IsType(t, &protocol.BaseExporter{}, exporter)
-	assert.Equal(t, exporter.GetInvoker().GetUrl().String(), suburl.String())
+	assert.Equal(t, exporter.GetInvoker().GetURL().String(), suburl.String())
 	return url
 }
 
 func TestExporter(t *testing.T) {
-
 	regProtocol := newRegistryProtocol()
 	exporterNormal(t, regProtocol)
 }
@@ -246,7 +246,9 @@ func TestExportWithOverrideListener(t *testing.T) {
 	time.Sleep(1e9)
 	newUrl := url.SubURL.Clone()
 	newUrl.SetParam(constant.CLUSTER_KEY, "mock1")
-	v2, _ := regProtocol.bounds.Load(getCacheKey(newUrl))
+	delKeys := gxset.NewSet("dynamic", "enabled")
+	key := newUrl.CloneExceptParams(delKeys).String()
+	v2, _ := regProtocol.bounds.Load(key)
 	assert.NotNil(t, v2)
 }
 
@@ -266,7 +268,10 @@ func TestExportWithServiceConfig(t *testing.T) {
 	newUrl := url.SubURL.Clone()
 	newUrl.SetParam(constant.CLUSTER_KEY, "mock1")
 
-	v2, _ := regProtocol.bounds.Load(getCacheKey(newUrl))
+	delKeys := gxset.NewSet("dynamic", "enabled")
+	key := newUrl.CloneExceptParams(delKeys).String()
+	v2, _ := regProtocol.bounds.Load(key)
+
 	assert.NotNil(t, v2)
 }
 
@@ -285,7 +290,9 @@ func TestExportWithApplicationConfig(t *testing.T) {
 
 	newUrl := url.SubURL.Clone()
 	newUrl.SetParam(constant.CLUSTER_KEY, "mock1")
-	v2, _ := regProtocol.bounds.Load(getCacheKey(newUrl))
+	delKeys := gxset.NewSet("dynamic", "enabled")
+	key := newUrl.CloneExceptParams(delKeys).String()
+	v2, _ := regProtocol.bounds.Load(key)
 	assert.NotNil(t, v2)
 }
 
@@ -295,5 +302,4 @@ func TestGetProviderUrlWithHideKey(t *testing.T) {
 	assert.NotContains(t, providerUrl.GetParams(), ".c")
 	assert.NotContains(t, providerUrl.GetParams(), ".d")
 	assert.Contains(t, providerUrl.GetParams(), "a")
-
 }

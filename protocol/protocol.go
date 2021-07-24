@@ -22,8 +22,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
 )
 
 // Protocol
@@ -137,7 +137,6 @@ func NewBaseExporter(key string, invoker Invoker, exporterMap *sync.Map) *BaseEx
 // GetInvoker gets invoker
 func (de *BaseExporter) GetInvoker() Invoker {
 	return de.invoker
-
 }
 
 // Unexport exported service.

@@ -18,12 +18,10 @@
 package extension
 
 import (
-	"github.com/apache/dubbo-go/config/interfaces"
+	"dubbo.apache.org/dubbo-go/v3/config/interfaces"
 )
 
-var (
-	processors = make(map[string]interfaces.ConfigPostProcessor)
-)
+var processors = make(map[string]interfaces.ConfigPostProcessor)
 
 // SetConfigPostProcessor registers a ConfigPostProcessor with the given name.
 func SetConfigPostProcessor(name string, processor interfaces.ConfigPostProcessor) {

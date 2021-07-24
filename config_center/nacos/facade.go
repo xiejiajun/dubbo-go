@@ -19,74 +19,35 @@ package nacos
 
 import (
 	"sync"
-	"time"
-)
-import (
-	"github.com/apache/dubbo-getty"
-	perrors "github.com/pkg/errors"
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
+	nacosClient "github.com/dubbogo/gost/database/kv/nacos"
 )
 
-const (
-	connDelay    = 3
-	maxFailTimes = 15
+import (
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
 )
 
 type nacosClientFacade interface {
-	NacosClient() *NacosClient
-	SetNacosClient(*NacosClient)
-	// WaitGroup for wait group control, zk client listener & zk client container
+	NacosClient() *nacosClient.NacosConfigClient
+	SetNacosClient(*nacosClient.NacosConfigClient)
+	// WaitGroup for wait group control, zk configClient listener & zk configClient container
 	WaitGroup() *sync.WaitGroup
-	// GetDone For nacos client control	RestartCallBack() bool
+	// GetDone For nacos configClient control	RestartCallBack() bool
 	GetDone() chan struct{}
 	common.Node
 }
 
-// HandleClientRestart Restart client handler
+// HandleClientRestart Restart configClient handler
 func HandleClientRestart(r nacosClientFacade) {
-	var (
-		err       error
-		failTimes int
-	)
-
 	defer r.WaitGroup().Done()
-LOOP:
 	for {
 		select {
 		case <-r.GetDone():
 			logger.Warnf("(NacosProviderRegistry)reconnectNacosRegistry goroutine exit now...")
-			break LOOP
-			// re-register all services
-		case <-r.NacosClient().Done():
-			r.NacosClient().Close()
-			nacosName := r.NacosClient().name
-			nacosAddress := r.NacosClient().NacosAddrs
-			r.SetNacosClient(nil)
-
-			// Connect nacos until success.
-			failTimes = 0
-			for {
-				select {
-				case <-r.GetDone():
-					logger.Warnf("(NacosProviderRegistry)reconnectZkRegistry goroutine exit now...")
-					break LOOP
-				case <-getty.GetTimeWheel().After(time.Duration(failTimes*connDelay) * time.Second): // Prevent crazy reconnection nacos.
-				}
-				err = ValidateNacosClient(r, WithNacosName(nacosName))
-				logger.Infof("NacosProviderRegistry.validateNacosClient(nacosAddr{%s}) = error{%#v}",
-					nacosAddress, perrors.WithStack(err))
-				if err == nil {
-					break
-				}
-				failTimes++
-				if maxFailTimes <= failTimes {
-					failTimes = maxFailTimes
-				}
-			}
+			return
 		}
 	}
 }

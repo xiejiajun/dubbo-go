@@ -25,9 +25,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
 )
 
 const (
@@ -71,7 +71,6 @@ func TestConfigureVersion2p6WithIp(t *testing.T) {
 	assert.NoError(t, err)
 	configurator.Configure(providerUrl)
 	assert.Equal(t, failfast, providerUrl.GetParam(constant.CLUSTER_KEY, ""))
-
 }
 
 func TestConfigureVersion2p7(t *testing.T) {
@@ -83,5 +82,4 @@ func TestConfigureVersion2p7(t *testing.T) {
 	assert.NoError(t, err)
 	configurator.Configure(providerUrl)
 	assert.Equal(t, failfast, providerUrl.GetParam(constant.CLUSTER_KEY, ""))
-
 }

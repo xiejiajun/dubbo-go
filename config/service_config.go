@@ -19,7 +19,6 @@ package config
 
 import (
 	"container/list"
-	"context"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -36,17 +35,16 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/protocolwrapper"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/protocolwrapper"
 )
 
 // ServiceConfig is the configuration of the service provider
 type ServiceConfig struct {
-	context                     context.Context
 	id                          string
 	Filter                      string            `yaml:"filter" json:"filter,omitempty" property:"filter"`
 	Protocol                    string            `default:"dubbo"  required:"true"  yaml:"protocol"  json:"protocol,omitempty" property:"protocol"` // multi protocol support, split by ','
@@ -108,9 +106,8 @@ func (c *ServiceConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 // NewServiceConfig The only way to get a new ServiceConfig
-func NewServiceConfig(id string, context context.Context) *ServiceConfig {
+func NewServiceConfig(id string) *ServiceConfig {
 	return &ServiceConfig{
-		context:    context,
 		id:         id,
 		unexported: atomic.NewBool(false),
 		exported:   atomic.NewBool(false),
@@ -227,6 +224,13 @@ func (c *ServiceConfig) Export() error {
 				c.exporters = append(c.exporters, exporter)
 			}
 		} else {
+			if ivkURL.GetParam(constant.INTERFACE_KEY, "") == constant.METADATA_SERVICE_NAME {
+				ms, err := extension.GetLocalMetadataService("")
+				if err != nil {
+					return err
+				}
+				ms.SetMetadataServiceURL(ivkURL)
+			}
 			invoker := proxyFactory.GetInvoker(ivkURL)
 			exporter := extension.GetProtocol(protocolwrapper.FILTER).Export(invoker)
 			if exporter == nil {
@@ -341,7 +345,7 @@ func (c *ServiceConfig) GetExportedUrls() []*common.URL {
 	if c.exported.Load() {
 		var urls []*common.URL
 		for _, exporter := range c.exporters {
-			urls = append(urls, exporter.GetInvoker().GetUrl())
+			urls = append(urls, exporter.GetInvoker().GetURL())
 		}
 		return urls
 	}
@@ -349,8 +353,9 @@ func (c *ServiceConfig) GetExportedUrls() []*common.URL {
 }
 
 func publishServiceDefinition(url *common.URL) {
-	if remoteMetadataService, err := extension.GetRemoteMetadataService(); err == nil && remoteMetadataService != nil {
-		remoteMetadataService.PublishServiceDefinition(url)
+	if remotingMetadataService, err := extension.GetRemotingMetadataService(); err == nil && remotingMetadataService != nil {
+		remotingMetadataService.PublishServiceDefinition(url)
+
 	}
 }
 

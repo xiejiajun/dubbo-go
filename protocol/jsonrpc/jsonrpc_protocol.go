@@ -24,17 +24,17 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
 	// JSONRPC
-	//module name
+	// module name
 	JSONRPC = "jsonrpc"
 )
 
@@ -61,7 +61,7 @@ func NewJsonrpcProtocol() *JsonrpcProtocol {
 
 // Export JSON RPC service for remote invocation
 func (jp *JsonrpcProtocol) Export(invoker protocol.Invoker) protocol.Exporter {
-	url := invoker.GetUrl()
+	url := invoker.GetURL()
 	serviceKey := strings.TrimPrefix(url.Path, "/")
 
 	exporter := NewJsonrpcExporter(serviceKey, invoker, jp.ExporterMap())
@@ -76,8 +76,8 @@ func (jp *JsonrpcProtocol) Export(invoker protocol.Invoker) protocol.Exporter {
 
 // Refer a remote JSON PRC service from registry
 func (jp *JsonrpcProtocol) Refer(url *common.URL) protocol.Invoker {
-	//default requestTimeout
-	var requestTimeout = config.GetConsumerConfig().RequestTimeout
+	// default requestTimeout
+	requestTimeout := config.GetConsumerConfig().RequestTimeout
 
 	requestTimeoutStr := url.GetParam(constant.TIMEOUT_KEY, config.GetConsumerConfig().Request_Timeout)
 	if t, err := time.ParseDuration(requestTimeoutStr); err == nil {

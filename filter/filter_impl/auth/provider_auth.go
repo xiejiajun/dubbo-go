@@ -22,16 +22,15 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/filter"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 // ProviderAuthFilter verifies the correctness of the signature on provider side
-type ProviderAuthFilter struct {
-}
+type ProviderAuthFilter struct{}
 
 func init() {
 	extension.SetFilter(constant.PROVIDER_AUTH_FILTER, getProviderAuthFilter)
@@ -40,7 +39,7 @@ func init() {
 // Invoke retrieves the configured Authenticator to verify the signature in an invocation
 func (paf *ProviderAuthFilter) Invoke(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation) protocol.Result {
 	logger.Infof("invoking providerAuth filter.")
-	url := invoker.GetUrl()
+	url := invoker.GetURL()
 
 	err := doAuthWork(url, func(authenticator filter.Authenticator) error {
 		return authenticator.Authenticate(invocation, url)

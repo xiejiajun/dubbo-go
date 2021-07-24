@@ -27,16 +27,16 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster"
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 const (
 	ip       = "192.168.1.0"
 	port8080 = 8080
-	port8082 = 8082
+	port8081 = 8081
 
 	url8080Short = "dubbo://192.168.1.0:8080"
 	url8081Short = "dubbo://192.168.1.0:8081"
@@ -52,7 +52,7 @@ func TestConsistentHashSelectorSuite(t *testing.T) {
 
 type consistentHashSelectorSuite struct {
 	suite.Suite
-	selector *ConsistentHashSelector
+	selector *consistentHashSelector
 }
 
 func (s *consistentHashSelectorSuite) SetupTest() {
@@ -75,7 +75,7 @@ func (s *consistentHashSelectorSuite) TestSelectForKey() {
 	s.selector.virtualInvokers[9999945] = protocol.NewBaseInvoker(url2)
 	s.selector.keys = []uint32{99874, 9999945}
 	result := s.selector.selectForKey(9999944)
-	s.Equal(result.GetUrl().String(), url8081Short+"?")
+	s.Equal(result.GetURL().String(), url8081Short+"?")
 }
 
 func TestConsistentHashLoadBalanceSuite(t *testing.T) {
@@ -114,9 +114,9 @@ func (s *consistentHashLoadBalanceSuite) SetupTest() {
 func (s *consistentHashLoadBalanceSuite) TestSelect() {
 	args := []interface{}{"name", "password", "age"}
 	invoker := s.lb.Select(s.invokers, invocation.NewRPCInvocation("echo", args, nil))
-	s.Equal(invoker.GetUrl().Location, fmt.Sprintf("%s:%d", ip, port8080))
+	s.Equal(fmt.Sprintf("%s:%d", ip, port8081), invoker.GetURL().Location)
 
 	args = []interface{}{"ok", "abc"}
 	invoker = s.lb.Select(s.invokers, invocation.NewRPCInvocation("echo", args, nil))
-	s.Equal(invoker.GetUrl().Location, fmt.Sprintf("%s:%d", ip, port8082))
+	s.Equal(fmt.Sprintf("%s:%d", ip, port8080), invoker.GetURL().Location)
 }

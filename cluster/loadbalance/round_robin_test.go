@@ -28,10 +28,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 func TestRoundRobinSelect(t *testing.T) {
@@ -43,7 +43,7 @@ func TestRoundRobinSelect(t *testing.T) {
 		constant.LOCAL_HOST_VALUE, constant.DEFAULT_PORT))
 	invokers = append(invokers, protocol.NewBaseInvoker(url))
 	i := loadBalance.Select(invokers, &invocation.RPCInvocation{})
-	assert.True(t, i.GetUrl().URLEqual(url))
+	assert.True(t, i.GetURL().URLEqual(url))
 
 	for i := 1; i < 10; i++ {
 		url, _ := common.NewURL(fmt.Sprintf("dubbo://192.168.1.%v:20000/org.apache.demo.HelloService", i))
@@ -71,7 +71,7 @@ func TestRoundRobinByWeight(t *testing.T) {
 	}
 
 	for _, i := range invokers {
-		w, _ := strconv.Atoi(i.GetUrl().GetParam("weight", "-1"))
+		w, _ := strconv.Atoi(i.GetURL().GetParam("weight", "-1"))
 		assert.True(t, selected[i] == w)
 	}
 }

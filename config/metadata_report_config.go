@@ -27,15 +27,15 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/config/instance"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/config/instance"
 )
 
 // MethodConfig is method level configuration
 type MetadataReportConfig struct {
-	Protocol  string            `required:"true"  yaml:"protocol"  json:"protocol,omitempty"`
-	RemoteRef string            `required:"true"  yaml:"remote_ref"  json:"remote_ref,omitempty"`
+	Protocol  string            `required:"true"  yaml:"protocol"  json:"protocol,omitempty" property:"protocol"`
+	RemoteRef string            `required:"true"  yaml:"remote_ref"  json:"remote_ref,omitempty" property:"remote_ref"`
 	Params    map[string]string `yaml:"params" json:"params,omitempty" property:"params"`
 	Group     string            `yaml:"group" json:"group,omitempty" property:"group"`
 }

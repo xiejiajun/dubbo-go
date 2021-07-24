@@ -24,9 +24,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 type apolloListener struct {
@@ -42,7 +42,6 @@ func newApolloListener() *apolloListener {
 
 // OnChange process each listener
 func (a *apolloListener) OnChange(changeEvent *storage.ChangeEvent) {
-
 }
 
 // OnNewestChange process each listener by all changes

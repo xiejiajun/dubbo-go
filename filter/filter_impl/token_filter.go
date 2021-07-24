@@ -27,10 +27,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/filter"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 const (
@@ -47,7 +47,7 @@ type TokenFilter struct{}
 
 // Invoke verifies the incoming token with the service configured token
 func (tf *TokenFilter) Invoke(ctx context.Context, invoker protocol.Invoker, invocation protocol.Invocation) protocol.Result {
-	invokerTkn := invoker.GetUrl().GetParam(constant.TOKEN_KEY, "")
+	invokerTkn := invoker.GetURL().GetParam(constant.TOKEN_KEY, "")
 	if len(invokerTkn) > 0 {
 		attachs := invocation.Attachments()
 		remoteTkn, exist := attachs[constant.TOKEN_KEY]

@@ -29,15 +29,15 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	"github.com/apache/dubbo-go/remoting"
-	"github.com/apache/dubbo-go/remoting/getty"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
+	"dubbo.apache.org/dubbo-go/v3/remoting/getty"
 )
 
 const (
@@ -56,9 +56,7 @@ func init() {
 	extension.SetProtocol(DUBBO, GetProtocol)
 }
 
-var (
-	dubboProtocol *DubboProtocol
-)
+var dubboProtocol *DubboProtocol
 
 // It support dubbo protocol. It implements Protocol interface for dubbo protocol.
 type DubboProtocol struct {
@@ -79,7 +77,7 @@ func NewDubboProtocol() *DubboProtocol {
 
 // Export export dubbo service.
 func (dp *DubboProtocol) Export(invoker protocol.Invoker) protocol.Exporter {
-	url := invoker.GetUrl()
+	url := invoker.GetURL()
 	serviceKey := url.ServiceKey()
 	exporter := NewDubboExporter(serviceKey, invoker, dp.ExporterMap())
 	dp.SetExporterMap(serviceKey, exporter)
@@ -152,7 +150,7 @@ func doHandleRequest(rpcInvocation *invocation.RPCInvocation) protocol.RPCResult
 		err := fmt.Errorf("don't have this exporter, key: %s", rpcInvocation.ServiceKey())
 		logger.Errorf(err.Error())
 		result.Err = err
-		//reply(session, p, hessian.PackageResponse)
+		// reply(session, p, hessian.PackageResponse)
 		return result
 	}
 	invoker := exporter.(protocol.Exporter).GetInvoker()
@@ -163,12 +161,12 @@ func doHandleRequest(rpcInvocation *invocation.RPCInvocation) protocol.RPCResult
 		invokeResult := invoker.Invoke(ctx, rpcInvocation)
 		if err := invokeResult.Error(); err != nil {
 			result.Err = invokeResult.Error()
-			//p.Header.ResponseStatus = hessian.Response_OK
-			//p.Body = hessian.NewResponse(nil, err, result.Attachments())
+			// p.Header.ResponseStatus = hessian.Response_OK
+			// p.Body = hessian.NewResponse(nil, err, result.Attachments())
 		} else {
 			result.Rest = invokeResult.Result()
-			//p.Header.ResponseStatus = hessian.Response_OK
-			//p.Body = hessian.NewResponse(res, nil, result.Attachments())
+			// p.Header.ResponseStatus = hessian.Response_OK
+			// p.Body = hessian.NewResponse(res, nil, result.Attachments())
 		}
 	} else {
 		result.Err = fmt.Errorf("don't have the invoker, key: %s", rpcInvocation.ServiceKey())
@@ -215,7 +213,9 @@ func getExchangeClient(url *common.URL) *remoting.ExchangeClient {
 	if clientTmp == nil {
 		return nil
 	}
-	return clientTmp.(*remoting.ExchangeClient)
+	exchangeClient := clientTmp.(*remoting.ExchangeClient)
+	exchangeClient.IncreaseActiveNumber()
+	return exchangeClient
 }
 
 // rebuildCtx rebuild the context by attachment.

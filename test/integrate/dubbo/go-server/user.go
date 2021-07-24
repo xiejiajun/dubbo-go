@@ -25,7 +25,7 @@ import (
 
 import (
 	hessian "github.com/apache/dubbo-go-hessian2"
-	"github.com/apache/dubbo-go/config"
+	"dubbo.apache.org/dubbo-go/v3/config"
 )
 
 func init() {
@@ -35,14 +35,13 @@ func init() {
 }
 
 type User struct {
-	Id   string
+	ID   string
 	Name string
 	Age  int32
 	Time time.Time
 }
 
-type UserProvider struct {
-}
+type UserProvider struct{}
 
 func (u *UserProvider) GetUser(ctx context.Context, req []interface{}) (*User, error) {
 	println("req:%#v", req)

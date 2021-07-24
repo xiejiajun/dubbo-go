@@ -29,16 +29,16 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/filter"
-	"github.com/apache/dubbo-go/protocol"
-	invocation2 "github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/filter"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	invocation2 "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 const (
 	// GENERIC
-	//generic module name
+	// generic module name
 	GENERIC = "generic"
 )
 
@@ -115,14 +115,14 @@ func struct2MapAll(obj interface{}) interface{} {
 		return result
 	} else if t.Kind() == reflect.Slice {
 		value := reflect.ValueOf(obj)
-		var newTemps = make([]interface{}, 0, value.Len())
+		newTemps := make([]interface{}, 0, value.Len())
 		for i := 0; i < value.Len(); i++ {
 			newTemp := struct2MapAll(value.Index(i).Interface())
 			newTemps = append(newTemps, newTemp)
 		}
 		return newTemps
 	} else if t.Kind() == reflect.Map {
-		var newTempMap = make(map[interface{}]interface{}, v.Len())
+		newTempMap := make(map[interface{}]interface{}, v.Len())
 		iter := v.MapRange()
 		for iter.Next() {
 			if !iter.Value().CanInterface() {

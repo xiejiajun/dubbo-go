@@ -29,11 +29,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
-	invocation_impl "github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	invocation_impl "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 // nolint
@@ -53,9 +53,7 @@ type (
 	ImplementFunc func(p *Proxy, v common.RPCService)
 )
 
-var (
-	typError = reflect.Zero(reflect.TypeOf((*error)(nil)).Elem()).Type()
-)
+var typError = reflect.Zero(reflect.TypeOf((*error)(nil)).Elem()).Type()
 
 // NewProxy create service proxy.
 func NewProxy(invoke protocol.Invoker, callback interface{}, attachments map[string]string) *Proxy {
@@ -251,7 +249,7 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 				continue
 			}
 
-			var funcOuts = make([]reflect.Type, outNum)
+			funcOuts := make([]reflect.Type, outNum)
 			for i := 0; i < outNum; i++ {
 				funcOuts[i] = t.Type.Out(i)
 			}
@@ -261,5 +259,4 @@ func DefaultProxyImplementFunc(p *Proxy, v common.RPCService) {
 			logger.Debugf("set method [%s]", methodName)
 		}
 	}
-
 }

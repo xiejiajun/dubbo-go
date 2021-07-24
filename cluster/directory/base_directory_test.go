@@ -28,10 +28,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster/router/chain"
-	_ "github.com/apache/dubbo-go/cluster/router/condition"
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/cluster/router/chain"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
 )
 
 var (
@@ -42,28 +41,17 @@ var (
 
 func TestNewBaseDirectory(t *testing.T) {
 	dir := NewBaseDirectory(url)
-	assert.Equal(t, url, dir.GetUrl())
+	assert.Equal(t, url, dir.GetURL())
 	assert.Equal(t, url, dir.GetDirectoryUrl())
 }
 
 func TestBuildRouterChain(t *testing.T) {
-
 	regURL := url
 	regURL.AddParam(constant.INTERFACE_KEY, "mock-app")
 	directory := NewBaseDirectory(regURL)
 	var err error
 	directory.routerChain, err = chain.NewRouterChain(regURL)
-	assert.Nil(t, err)
-	localIP := common.GetLocalIp()
-	rule := base64.URLEncoding.EncodeToString([]byte("true => " + " host = " + localIP))
-	routeURL := getRouteURL(rule, anyURL)
-	routeURL.AddParam(constant.INTERFACE_KEY, "mock-app")
-	routerURLs := make([]*common.URL, 0)
-	routerURLs = append(routerURLs, routeURL)
-	directory.SetRouters(routerURLs)
-	chain := directory.RouterChain()
-
-	assert.NotNil(t, chain)
+	assert.Error(t, err)
 }
 
 func getRouteURL(rule string, u *common.URL) *common.URL {

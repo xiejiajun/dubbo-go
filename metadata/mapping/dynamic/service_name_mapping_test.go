@@ -27,13 +27,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/config_center"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
 )
 
 func TestDynamicConfigurationServiceNameMapping(t *testing.T) {
-
 	// mock data
 	appName := "myApp"
 	dc, err := (&config_center.MockDynamicConfigurationFactory{

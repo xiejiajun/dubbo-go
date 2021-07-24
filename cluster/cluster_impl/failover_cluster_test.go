@@ -23,20 +23,21 @@ import (
 	"net/url"
 	"testing"
 )
+
 import (
 	perrors "github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster/directory"
-	"github.com/apache/dubbo-go/cluster/loadbalance"
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/cluster/directory"
+	"dubbo.apache.org/dubbo-go/v3/cluster/loadbalance"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 // ///////////////////////////
@@ -63,7 +64,7 @@ func NewMockInvoker(url *common.URL, successCount int) *MockInvoker {
 }
 
 // nolint
-func (bi *MockInvoker) GetUrl() *common.URL {
+func (bi *MockInvoker) GetURL() *common.URL {
 	return bi.url
 }
 
@@ -102,7 +103,7 @@ func (bi *MockInvoker) Invoke(c context.Context, invocation protocol.Invocation)
 
 // nolint
 func (bi *MockInvoker) Destroy() {
-	logger.Infof("Destroy invoker: %v", bi.GetUrl().String())
+	logger.Infof("Destroy invoker: %v", bi.GetURL().String())
 	bi.destroyed = true
 	bi.available = false
 }

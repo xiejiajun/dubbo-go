@@ -27,13 +27,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/registry"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/registry"
 )
 
 func TestGetCustomizableServiceInstanceListener(t *testing.T) {
-
-	prepareMetadataServiceForTest()
 
 	cus := GetCustomizableServiceInstanceListener()
 
@@ -50,8 +48,7 @@ func TestGetCustomizableServiceInstanceListener(t *testing.T) {
 	assert.NotNil(t, tp)
 }
 
-type mockEvent struct {
-}
+type mockEvent struct{}
 
 func (m *mockEvent) String() string {
 	panic("implement me")
@@ -65,8 +62,7 @@ func (m *mockEvent) GetTimestamp() time.Time {
 	panic("implement me")
 }
 
-type mockCustomizer struct {
-}
+type mockCustomizer struct{}
 
 func (m *mockCustomizer) GetPriority() int {
 	return 0

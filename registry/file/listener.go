@@ -17,13 +17,11 @@
 
 package file
 
-import "github.com/apache/dubbo-go/config_center"
+import "dubbo.apache.org/dubbo-go/v3/config_center"
 
 // RegistryConfigurationListener represent the processor of flie watcher
-type RegistryConfigurationListener struct {
-}
+type RegistryConfigurationListener struct{}
 
 // Process submit the ConfigChangeEvent to the event chan to notify all observer
 func (l *RegistryConfigurationListener) Process(configType *config_center.ConfigChangeEvent) {
-
 }

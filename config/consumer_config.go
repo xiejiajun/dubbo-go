@@ -28,24 +28,20 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/common/yaml"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common/yaml"
 )
 
 const (
 	MaxWheelTimeSpan = 900e9 // 900s, 15 minute
 )
 
-/////////////////////////
-// consumerConfig
-/////////////////////////
-
 // ConsumerConfig is Consumer default configuration
 type ConsumerConfig struct {
-	BaseConfig `yaml:",inline"`
-	configCenter
-	Filter string `yaml:"filter" json:"filter,omitempty" property:"filter"`
+	BaseConfig   `yaml:",inline" property:"base"`
+	configCenter `yaml:"-"`
+	Filter       string `yaml:"filter" json:"filter,omitempty" property:"filter"`
 	// client
 	Connect_Timeout string `default:"100ms"  yaml:"connect_timeout" json:"connect_timeout,omitempty" property:"connect_timeout"`
 	ConnectTimeout  time.Duration
@@ -95,9 +91,9 @@ func ConsumerInit(confConFile string) error {
 		return perrors.Errorf("unmarshalYmlConfig error %v", perrors.WithStack(err))
 	}
 	consumerConfig.fileStream = bytes.NewBuffer(fileStream)
-	//set method interfaceId & interfaceName
+	// set method interfaceId & interfaceName
 	for k, v := range consumerConfig.References {
-		//set id for reference
+		// set id for reference
 		for _, n := range consumerConfig.References[k].Methods {
 			n.InterfaceName = v.InterfaceName
 			n.InterfaceId = k
@@ -124,7 +120,7 @@ func ConsumerInit(confConFile string) error {
 }
 
 func configCenterRefreshConsumer() error {
-	//fresh it
+	// fresh it
 	var err error
 	if consumerConfig.Request_Timeout != "" {
 		if consumerConfig.RequestTimeout, err = time.ParseDuration(consumerConfig.Request_Timeout); err != nil {

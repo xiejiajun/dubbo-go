@@ -28,10 +28,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/cluster"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 type forkingClusterInvoker struct {
@@ -56,8 +56,8 @@ func (invoker *forkingClusterInvoker) Invoke(ctx context.Context, invocation pro
 	}
 
 	var selected []protocol.Invoker
-	forks := invoker.GetUrl().GetParamByIntValue(constant.FORKS_KEY, constant.DEFAULT_FORKS)
-	timeouts := invoker.GetUrl().GetParamInt(constant.TIMEOUT_KEY, constant.DEFAULT_TIMEOUT)
+	forks := invoker.GetURL().GetParamByIntValue(constant.FORKS_KEY, constant.DEFAULT_FORKS)
+	timeouts := invoker.GetURL().GetParamInt(constant.TIMEOUT_KEY, constant.DEFAULT_TIMEOUT)
 	if forks < 0 || forks > len(invokers) {
 		selected = invokers
 	} else {

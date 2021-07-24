@@ -29,14 +29,14 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	"github.com/apache/dubbo-go/protocol/rest/client"
-	"github.com/apache/dubbo-go/protocol/rest/client/client_impl"
-	rest_config "github.com/apache/dubbo-go/protocol/rest/config"
-	"github.com/apache/dubbo-go/protocol/rest/server/server_impl"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/protocol/rest/client"
+	"dubbo.apache.org/dubbo-go/v3/protocol/rest/client/client_impl"
+	rest_config "dubbo.apache.org/dubbo-go/v3/protocol/rest/config"
+	"dubbo.apache.org/dubbo-go/v3/protocol/rest/server/server_impl"
 )
 
 const (
@@ -172,14 +172,14 @@ func TestRestInvokerInvoke(t *testing.T) {
 		invocation.WithArguments([]interface{}{1, int32(23), "username", "application/json"}), invocation.WithReply(user))
 	res := invoker.Invoke(context.Background(), inv)
 	assert.NoError(t, res.Error())
-	assert.Equal(t, User{Id: 1, Age: int32(23), Name: "username"}, *res.Result().(*User))
+	assert.Equal(t, User{ID: 1, Age: int32(23), Name: "username"}, *res.Result().(*User))
 	now := time.Now()
 	inv = invocation.NewRPCInvocationWithOptions(invocation.WithMethodName("GetUserOne"),
 		invocation.WithArguments([]interface{}{&User{1, &now, int32(23), "username"}}), invocation.WithReply(user))
 	res = invoker.Invoke(context.Background(), inv)
 	assert.NoError(t, res.Error())
 	assert.NotNil(t, res.Result())
-	assert.Equal(t, 1, res.Result().(*User).Id)
+	assert.Equal(t, 1, res.Result().(*User).ID)
 	assert.Equal(t, now.Unix(), res.Result().(*User).Time.Unix())
 	assert.Equal(t, int32(23), res.Result().(*User).Age)
 	assert.Equal(t, "username", res.Result().(*User).Name)
@@ -199,7 +199,7 @@ func TestRestInvokerInvoke(t *testing.T) {
 	assert.Equal(t, "username", res.Result().(*User).Name)
 	// test 3
 	inv = invocation.NewRPCInvocationWithOptions(invocation.WithMethodName("GetUserFour"),
-		invocation.WithArguments([]interface{}{[]User{User{1, nil, int32(23), "username"}}}), invocation.WithReply(user))
+		invocation.WithArguments([]interface{}{[]User{{1, nil, int32(23), "username"}}}), invocation.WithReply(user))
 	res = invoker.Invoke(context.Background(), inv)
 	assert.NoError(t, res.Error())
 	assert.NotNil(t, res.Result())

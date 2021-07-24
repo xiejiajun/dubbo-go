@@ -28,12 +28,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/config"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config_center"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/config"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
 )
 
 // ConfigCenterConfig is configuration for config center
@@ -44,7 +44,6 @@ import (
 //
 // ConfigCenter has currently supported Zookeeper, Nacos, Etcd, Consul, Apollo
 type ConfigCenterConfig struct {
-	//context       context.Context
 	Protocol      string `required:"true"  yaml:"protocol"  json:"protocol,omitempty"`
 	Address       string `yaml:"address" json:"address,omitempty"`
 	Cluster       string `yaml:"cluster" json:"cluster,omitempty"`
@@ -58,7 +57,6 @@ type ConfigCenterConfig struct {
 	AppId         string `default:"dubbo" yaml:"app_id"  json:"app_id,omitempty"`
 	TimeoutStr    string `yaml:"timeout"  json:"timeout,omitempty"`
 	RemoteRef     string `required:"false"  yaml:"remote_ref"  json:"remote_ref,omitempty"`
-	//timeout       time.Duration
 }
 
 // UnmarshalYAML unmarshals the ConfigCenterConfig by @unmarshal function
@@ -81,8 +79,7 @@ func (c *ConfigCenterConfig) GetUrlMap() url.Values {
 	return urlMap
 }
 
-type configCenter struct {
-}
+type configCenter struct{}
 
 // toURL will compatible with baseConfig.ConfigCenterConfig.Address and baseConfig.ConfigCenterConfig.RemoteRef before 1.6.0
 // After 1.6.0 will not compatible, only baseConfig.ConfigCenterConfig.RemoteRef
@@ -162,11 +159,11 @@ func (b *configCenter) prepareEnvironment(baseConfig BaseConfig, configCenterUrl
 
 	// appGroup config file
 	if len(appContent) != 0 {
-		appMapConent, err := dynamicConfig.Parser().Parse(appContent)
+		appMapContent, err := dynamicConfig.Parser().Parse(appContent)
 		if err != nil {
 			return perrors.WithStack(err)
 		}
-		config.GetEnvInstance().UpdateAppExternalConfigMap(appMapConent)
+		config.GetEnvInstance().UpdateAppExternalConfigMap(appMapContent)
 	}
 
 	return nil

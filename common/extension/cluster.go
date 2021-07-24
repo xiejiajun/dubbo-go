@@ -18,12 +18,10 @@
 package extension
 
 import (
-	"github.com/apache/dubbo-go/cluster"
+	"dubbo.apache.org/dubbo-go/v3/cluster"
 )
 
-var (
-	clusters = make(map[string]func() cluster.Cluster)
-)
+var clusters = make(map[string]func() cluster.Cluster)
 
 // SetCluster sets the cluster fault-tolerant mode with @name
 // For example: available/failfast/broadcast/failfast/failsafe/...

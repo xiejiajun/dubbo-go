@@ -26,11 +26,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/metadata/identifier"
-	"github.com/apache/dubbo-go/metadata/report"
-	"github.com/apache/dubbo-go/metadata/report/factory"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/metadata/identifier"
+	"dubbo.apache.org/dubbo-go/v3/metadata/report"
+	"dubbo.apache.org/dubbo-go/v3/metadata/report/factory"
 )
 
 func TestGetMetadataReportInstance(t *testing.T) {
@@ -42,14 +42,20 @@ func TestGetMetadataReportInstance(t *testing.T) {
 	assert.NotNil(t, rpt)
 }
 
-type mockMetadataReportFactory struct {
-}
+type mockMetadataReportFactory struct{}
 
 func (m *mockMetadataReportFactory) CreateMetadataReport(*common.URL) report.MetadataReport {
 	return &mockMetadataReport{}
 }
 
-type mockMetadataReport struct {
+type mockMetadataReport struct{}
+
+func (m mockMetadataReport) GetAppMetadata(metadataIdentifier *identifier.SubscriberMetadataIdentifier) (*common.MetadataInfo, error) {
+	panic("implement me")
+}
+
+func (m mockMetadataReport) PublishAppMetadata(metadataIdentifier *identifier.SubscriberMetadataIdentifier, info *common.MetadataInfo) error {
+	panic("implement me")
 }
 
 func (m mockMetadataReport) StoreProviderMetadata(*identifier.MetadataIdentifier, string) error {

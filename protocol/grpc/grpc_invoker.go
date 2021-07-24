@@ -30,14 +30,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
-var (
-	errNoReply = errors.New("request need @response")
-)
+var errNoReply = errors.New("request need @response")
 
 // nolint
 type GrpcInvoker struct {
@@ -72,9 +70,7 @@ func (gi *GrpcInvoker) getClient() *Client {
 
 // Invoke is used to call service method by invocation
 func (gi *GrpcInvoker) Invoke(ctx context.Context, invocation protocol.Invocation) protocol.Result {
-	var (
-		result protocol.RPCResult
-	)
+	var result protocol.RPCResult
 
 	if !gi.BaseInvoker.IsAvailable() {
 		// Generally, the case will not happen, because the invoker has been removed

@@ -25,18 +25,18 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-getty"
+	getty "github.com/apache/dubbo-getty"
 	perrors "github.com/pkg/errors"
 	v1 "k8s.io/api/core/v1"
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/registry"
-	"github.com/apache/dubbo-go/remoting/kubernetes"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/registry"
+	"dubbo.apache.org/dubbo-go/v3/remoting/kubernetes"
 )
 
 const (
@@ -46,8 +46,8 @@ const (
 )
 
 func init() {
-	//processID = fmt.Sprintf("%d", os.Getpid())
-	//localIP = common.GetLocalIp()
+	// processID = fmt.Sprintf("%d", os.Getpid())
+	// localIP = common.GetLocalIp()
 	extension.SetRegistry(Name, newKubernetesRegistry)
 }
 
@@ -84,7 +84,6 @@ func (r *kubernetesRegistry) CloseAndNilClient() {
 
 // CloseListener closes listeners
 func (r *kubernetesRegistry) CloseListener() {
-
 	r.cltLock.Lock()
 	l := r.configListener
 	r.cltLock.Unlock()
@@ -113,10 +112,7 @@ func (r *kubernetesRegistry) DoUnregister(root string, node string) error {
 
 // DoSubscribe actually subscribe the provider URL
 func (r *kubernetesRegistry) DoSubscribe(svc *common.URL) (registry.Listener, error) {
-
-	var (
-		configListener *configurationListener
-	)
+	var configListener *configurationListener
 
 	r.listenerLock.Lock()
 	configListener = r.configListener
@@ -137,7 +133,7 @@ func (r *kubernetesRegistry) DoSubscribe(svc *common.URL) (registry.Listener, er
 		r.listenerLock.Unlock()
 	}
 
-	//register the svc to dataListener
+	// register the svc to dataListener
 	r.dataListener.AddInterestedURL(svc)
 	go r.listener.ListenServiceEvent(fmt.Sprintf("/dubbo/%s/"+constant.DEFAULT_CATEGORY, svc.Service()), r.dataListener)
 
@@ -157,7 +153,6 @@ func (r *kubernetesRegistry) InitListeners() {
 }
 
 func newKubernetesRegistry(url *common.URL) (registry.Registry, error) {
-
 	// actually, kubernetes use in-cluster config,
 	r := &kubernetesRegistry{}
 
@@ -196,13 +191,12 @@ func newMockKubernetesRegistry(
 
 // HandleClientRestart will reconnect to  kubernetes registry center
 func (r *kubernetesRegistry) HandleClientRestart() {
-
 	var (
 		err       error
 		failTimes int
 	)
 
-	defer r.WaitGroup()
+	defer r.WaitGroup().Done()
 LOOP:
 	for {
 		select {

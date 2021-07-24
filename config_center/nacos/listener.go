@@ -26,9 +26,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 func callback(listener config_center.ConfigurationListener, _, _, dataId, data string) {
@@ -38,7 +38,7 @@ func callback(listener config_center.ConfigurationListener, _, _, dataId, data s
 func (n *nacosDynamicConfiguration) addListener(key string, listener config_center.ConfigurationListener) {
 	_, loaded := n.keyListeners.Load(key)
 	if !loaded {
-		err := (*n.client.Client()).ListenConfig(vo.ConfigParam{
+		err := n.client.Client().ListenConfig(vo.ConfigParam{
 			DataId: key,
 			Group:  "dubbo",
 			OnChange: func(namespace, group, dataId, data string) {

@@ -26,7 +26,7 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/config"
+	"dubbo.apache.org/dubbo-go/v3/config"
 )
 
 func init() {
@@ -34,7 +34,7 @@ func init() {
 }
 
 // GrpcGreeterImpl
-//used for dubbo-grpc biz client
+// used for dubbo-grpc biz client
 type GrpcGreeterImpl struct {
 	SayHello func(ctx context.Context, in *HelloRequest, out *HelloReply) error
 }

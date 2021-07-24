@@ -32,11 +32,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/parser"
-	"github.com/apache/dubbo-go/remoting"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/parser"
+	"dubbo.apache.org/dubbo-go/v3/remoting"
 )
 
 const (
@@ -59,8 +59,7 @@ const (
 }]`
 )
 
-var (
-	mockConfigRes = `{
+var mockConfigRes = `{
 	"appId": "testApplication_yang",
 	"cluster": "default",
 	"namespaceName": "mockDubbog.properties",
@@ -116,7 +115,6 @@ var (
 	},
 	"releaseKey": "20191104105242-0f13805d89f834a4"
 }`
-)
 
 func initApollo() *httptest.Server {
 	handlerMap := make(map[string]func(http.ResponseWriter, *http.Request), 1)
@@ -215,13 +213,13 @@ func TestListener(t *testing.T) {
 	},
 	"releaseKey": "20191104105242-0f13805d89f834a4"
 }`
-	//test add
+	// test add
 	apollo.AddListener(mockNamespace, listener)
 	listener.wg.Wait()
 	assert.Equal(t, "mockDubbog.properties", listener.event)
 	assert.Greater(t, listener.count, 0)
 
-	//test remove
+	// test remove
 	apollo.RemoveListener(mockNamespace, listener)
 	listenerCount := 0
 	apollo.listeners.Range(func(_, value interface{}) bool {

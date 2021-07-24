@@ -18,13 +18,11 @@
 package extension
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/config_center"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
 )
 
-var (
-	configCenters = make(map[string]func(config *common.URL) (config_center.DynamicConfiguration, error))
-)
+var configCenters = make(map[string]func(config *common.URL) (config_center.DynamicConfiguration, error))
 
 // SetConfigCenter sets the DynamicConfiguration with @name
 func SetConfigCenter(name string, v func(*common.URL) (config_center.DynamicConfiguration, error)) {
@@ -37,5 +35,4 @@ func GetConfigCenter(name string, config *common.URL) (config_center.DynamicConf
 		panic("config center for " + name + " is not existing, make sure you have import the package.")
 	}
 	return configCenters[name](config)
-
 }

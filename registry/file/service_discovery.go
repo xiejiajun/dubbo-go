@@ -33,14 +33,14 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/file"
-	"github.com/apache/dubbo-go/registry"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/file"
+	"dubbo.apache.org/dubbo-go/v3/registry"
 )
 
 // init will put the service discovery into extension
@@ -144,11 +144,11 @@ func (fssd *fileSystemServiceDiscovery) Register(instance registry.ServiceInstan
 
 // nolint
 func getServiceInstanceId(si registry.ServiceInstance) string {
-	if si.GetId() == "" {
+	if si.GetID() == "" {
 		return si.GetHost() + "." + strconv.Itoa(si.GetPort())
 	}
 
-	return si.GetId()
+	return si.GetID()
 }
 
 // nolint
@@ -181,7 +181,7 @@ func (fssd *fileSystemServiceDiscovery) Unregister(instance registry.ServiceInst
 		return perrors.WithStack(err)
 	}
 
-	delete(fssd.fileMap, instance.GetId())
+	delete(fssd.fileMap, instance.GetID())
 	return nil
 }
 
@@ -262,10 +262,10 @@ func (fssd *fileSystemServiceDiscovery) GetRequestInstances(serviceNames []strin
 }
 
 // ----------------- event ----------------------
-// AddListener adds a new ServiceInstancesChangedListener
+// AddListener adds a new ServiceInstancesChangedListenerImpl
 // client
-func (fssd *fileSystemServiceDiscovery) AddListener(listener *registry.ServiceInstancesChangedListener) error {
-	//fssd.dynamicConfiguration.AddListener(listener.ServiceName)
+func (fssd *fileSystemServiceDiscovery) AddListener(listener registry.ServiceInstancesChangedListener) error {
+	// fssd.dynamicConfiguration.AddListener(listener.ServiceName)
 	return nil
 }
 

@@ -30,11 +30,11 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	rest_config "github.com/apache/dubbo-go/protocol/rest/config"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	rest_config "dubbo.apache.org/dubbo-go/v3/protocol/rest/config"
 )
 
 const parseParameterErrorStr = "An error occurred while parsing parameters on the server"
@@ -89,7 +89,7 @@ func GetRouteFunc(invoker protocol.Invoker, methodConfig *rest_config.RestMethod
 			err  error
 			args []interface{}
 		)
-		svc := common.ServiceMap.GetServiceByServiceKey(invoker.GetUrl().Protocol, invoker.GetUrl().ServiceKey())
+		svc := common.ServiceMap.GetServiceByServiceKey(invoker.GetURL().Protocol, invoker.GetURL().ServiceKey())
 		// get method
 		method := svc.Method()[methodConfig.MethodName]
 		argsTypes := method.ArgsType()

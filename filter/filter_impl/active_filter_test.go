@@ -30,10 +30,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
-	"github.com/apache/dubbo-go/protocol/mock"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/protocol/mock"
 )
 
 func TestActiveFilterInvoke(t *testing.T) {
@@ -47,7 +47,6 @@ func TestActiveFilterInvoke(t *testing.T) {
 	invoker.EXPECT().GetUrl().Return(url).Times(1)
 	filter.Invoke(context.Background(), invoker, invoc)
 	assert.True(t, invoc.AttachmentsByKey(dubboInvokeStartTime, "") != "")
-
 }
 
 func TestActiveFilterOnResponse(t *testing.T) {
@@ -79,5 +78,4 @@ func TestActiveFilterOnResponse(t *testing.T) {
 	assert.True(t, urlStatus.GetFailedElapsed() >= int64(elapsed))
 	assert.True(t, urlStatus.GetLastRequestFailedTimestamp() != int64(0))
 	assert.True(t, methodStatus.GetLastRequestFailedTimestamp() != int64(0))
-
 }

@@ -30,10 +30,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/proxy/proxy_factory"
-	"github.com/apache/dubbo-go/protocol"
-	"github.com/apache/dubbo-go/protocol/invocation"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/proxy/proxy_factory"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
+	"dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 type TestStruct struct {
@@ -93,7 +93,8 @@ func TestGenericServiceFilterInvoke(t *testing.T) {
 			hessian.Object(append(make([]map[string]interface{}, 1), m)),
 			hessian.Object("111"),
 			hessian.Object(append(make([]map[string]interface{}, 1), m)),
-			hessian.Object("222")},
+			hessian.Object("222"),
+		},
 	}
 	s := &TestService{}
 	_, _ = common.ServiceMap.Register("com.test.Path", "testprotocol", "", "", s)

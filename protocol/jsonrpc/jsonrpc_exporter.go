@@ -22,10 +22,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 // JsonrpcExporter is JSON RPC exporter and  extends from base invoker.
@@ -42,9 +42,9 @@ func NewJsonrpcExporter(key string, invoker protocol.Invoker, exporterMap *sync.
 
 // Unexport exported JSON RPC service.
 func (je *JsonrpcExporter) Unexport() {
-	interfaceName := je.GetInvoker().GetUrl().GetParam(constant.INTERFACE_KEY, "")
+	interfaceName := je.GetInvoker().GetURL().GetParam(constant.INTERFACE_KEY, "")
 	je.BaseExporter.Unexport()
-	err := common.ServiceMap.UnRegister(interfaceName, JSONRPC, je.GetInvoker().GetUrl().ServiceKey())
+	err := common.ServiceMap.UnRegister(interfaceName, JSONRPC, je.GetInvoker().GetURL().ServiceKey())
 	if err != nil {
 		logger.Errorf("[JsonrpcExporter.Unexport] error: %v", err)
 	}

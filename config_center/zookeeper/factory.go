@@ -18,18 +18,17 @@
 package zookeeper
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/config_center"
-	"github.com/apache/dubbo-go/config_center/parser"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/config_center"
+	"dubbo.apache.org/dubbo-go/v3/config_center/parser"
 )
 
 func init() {
 	extension.SetConfigCenterFactory("zookeeper", func() config_center.DynamicConfigurationFactory { return &zookeeperDynamicConfigurationFactory{} })
 }
 
-type zookeeperDynamicConfigurationFactory struct {
-}
+type zookeeperDynamicConfigurationFactory struct{}
 
 func (f *zookeeperDynamicConfigurationFactory) GetDynamicConfiguration(url *common.URL) (config_center.DynamicConfiguration, error) {
 	dynamicConfiguration, err := newZookeeperDynamicConfiguration(url)
@@ -38,5 +37,4 @@ func (f *zookeeperDynamicConfigurationFactory) GetDynamicConfiguration(url *comm
 	}
 	dynamicConfiguration.SetParser(&parser.DefaultConfigurationParser{})
 	return dynamicConfiguration, err
-
 }

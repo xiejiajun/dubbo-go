@@ -23,8 +23,8 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/observer"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/observer"
 )
 
 func init() {
@@ -32,8 +32,7 @@ func init() {
 }
 
 // customizableServiceInstanceListener is singleton
-type customizableServiceInstanceListener struct {
-}
+type customizableServiceInstanceListener struct{}
 
 // GetPriority return priority 9999,
 // 9999 is big enough to make sure it will be last invoked

@@ -28,12 +28,12 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/extension"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/common/proxy"
-	"github.com/apache/dubbo-go/protocol"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/extension"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common/proxy"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 )
 
 func init() {
@@ -41,11 +41,10 @@ func init() {
 }
 
 // DefaultProxyFactory is the default proxy factory
-type DefaultProxyFactory struct {
-	//delegate ProxyFactory
+type DefaultProxyFactory struct { // delegate ProxyFactory
 }
 
-//you can rewrite DefaultProxyFactory in extension and delegate the default proxy factory like below
+// you can rewrite DefaultProxyFactory in extension and delegate the default proxy factory like below
 
 //func WithDelegate(delegateProxyFactory ProxyFactory) Option {
 //	return func(proxy ProxyFactory) {
@@ -65,7 +64,7 @@ func (factory *DefaultProxyFactory) GetProxy(invoker protocol.Invoker, url *comm
 
 // GetAsyncProxy gets a async proxy
 func (factory *DefaultProxyFactory) GetAsyncProxy(invoker protocol.Invoker, callBack interface{}, url *common.URL) *proxy.Proxy {
-	//create proxy
+	// create proxy
 	attachments := map[string]string{}
 	attachments[constant.ASYNC_KEY] = url.GetParam(constant.ASYNC_KEY, "false")
 	return proxy.NewProxy(invoker, callBack, attachments)
@@ -88,8 +87,8 @@ func (pi *ProxyInvoker) Invoke(ctx context.Context, invocation protocol.Invocati
 	result := &protocol.RPCResult{}
 	result.SetAttachments(invocation.Attachments())
 
-	//get providerUrl. The origin url may be is registry URL.
-	url := getProviderURL(pi.GetUrl())
+	// get providerUrl. The origin url may be is registry URL.
+	url := getProviderURL(pi.GetURL())
 
 	methodName := invocation.MethodName()
 	proto := url.Protocol

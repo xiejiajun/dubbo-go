@@ -20,8 +20,9 @@ package dubbo
 import (
 	"github.com/opentracing/opentracing-go"
 )
+
 import (
-	invocation_impl "github.com/apache/dubbo-go/protocol/invocation"
+	invocation_impl "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 func injectTraceCtx(currentSpan opentracing.Span, inv *invocation_impl.RPCInvocation) error {
@@ -36,7 +37,7 @@ func injectTraceCtx(currentSpan opentracing.Span, inv *invocation_impl.RPCInvoca
 }
 
 func filterContext(attachments map[string]interface{}) map[string]string {
-	var traceAttchment = make(map[string]string)
+	traceAttchment := make(map[string]string)
 	for k, v := range attachments {
 		if r, ok := v.(string); ok {
 			traceAttchment[k] = r

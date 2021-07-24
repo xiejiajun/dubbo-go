@@ -18,14 +18,12 @@
 package extension
 
 import (
-	"github.com/apache/dubbo-go/metrics"
+	"dubbo.apache.org/dubbo-go/v3/metrics"
 )
 
-var (
-	// we couldn't store the instance because the some instance may initialize before loading configuration
-	// so lazy initialization will be better.
-	metricReporterMap = make(map[string]func() metrics.Reporter, 4)
-)
+// we couldn't store the instance because the some instance may initialize before loading configuration
+// so lazy initialization will be better.
+var metricReporterMap = make(map[string]func() metrics.Reporter, 4)
 
 // SetMetricReporter sets a reporter with the @name
 func SetMetricReporter(name string, reporterFunc func() metrics.Reporter) {

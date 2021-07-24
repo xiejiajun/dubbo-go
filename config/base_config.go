@@ -29,8 +29,10 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common/config"
-	"github.com/apache/dubbo-go/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common/config"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/common/yaml"
 )
 
 // BaseConfig is the common configuration for provider and consumer
@@ -38,18 +40,38 @@ type BaseConfig struct {
 	ConfigCenterConfig *ConfigCenterConfig `yaml:"config_center" json:"config_center,omitempty"`
 
 	// since 1.5.0 version
-	Remotes              map[string]*RemoteConfig           `yaml:"remote" json:"remote,omitempty"`
-	ServiceDiscoveries   map[string]*ServiceDiscoveryConfig `yaml:"service_discovery" json:"service_discovery,omitempty"`
+	Remotes              map[string]*RemoteConfig           `yaml:"remote" json:"remote,omitempty" property:"remote"`
+	ServiceDiscoveries   map[string]*ServiceDiscoveryConfig `yaml:"service_discovery" json:"service_discovery,omitempty" property:"service_discovery"`
 	MetadataReportConfig *MetadataReportConfig              `yaml:"metadata_report" json:"metadata_report,omitempty" property:"metadata_report"`
 
 	// application config
 	ApplicationConfig *ApplicationConfig `yaml:"application" json:"application,omitempty" property:"application"`
 
-	//prefix              string
+	// prefix              string
 	fatherConfig        interface{}
 	EventDispatcherType string        `default:"direct" yaml:"event_dispatcher_type" json:"event_dispatcher_type,omitempty"`
 	MetricConfig        *MetricConfig `yaml:"metrics" json:"metrics,omitempty"`
 	fileStream          *bytes.Buffer
+
+	// cache file used to store the current used configurations.
+	CacheFile string `yaml:"cache_file" json:"cache_file,omitempty" property:"cache_file"`
+}
+
+func (c *BaseConfig) Prefix() string {
+	return constant.ConfigBasePrefix
+}
+
+func BaseInit(confBaseFile string) error {
+	if confBaseFile == "" {
+		return perrors.Errorf("application configure(base) file name is nil")
+	}
+	baseConfig = &BaseConfig{}
+	fileStream, err := yaml.UnmarshalYMLConfig(confBaseFile, baseConfig)
+	if err != nil {
+		return perrors.Errorf("unmarshalYmlConfig error %v", perrors.WithStack(err))
+	}
+	baseConfig.fileStream = bytes.NewBuffer(fileStream)
+	return nil
 }
 
 // nolint
@@ -65,9 +87,7 @@ func (c *BaseConfig) GetRemoteConfig(name string) (config *RemoteConfig, ok bool
 }
 
 func getKeyPrefix(val reflect.Value) []string {
-	var (
-		prefix string
-	)
+	var prefix string
 	configPrefixMethod := "Prefix"
 	if val.CanAddr() {
 		prefix = val.Addr().MethodByName(configPrefixMethod).Call(nil)[0].String()
@@ -94,7 +114,6 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 			f := val.Field(i)
 			if f.IsValid() {
 				setBaseValue := func(f reflect.Value) {
-
 					var (
 						ok    bool
 						value string
@@ -167,7 +186,6 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 						}
 
 					}
-
 				}
 
 				if f.Kind() == reflect.Ptr {
@@ -195,7 +213,6 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 						}
 
 					}
-
 				}
 				if f.Kind() == reflect.Map {
 
@@ -211,8 +228,6 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 						}
 
 					}
-
-					// iter := f.MapRange()
 
 					for _, k := range f.MapKeys() {
 						v := f.MapIndex(k)
@@ -232,7 +247,6 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 					}
 				}
 				setBaseValue(f)
-
 			}
 		}
 	}
@@ -240,7 +254,7 @@ func setFieldValue(val reflect.Value, id reflect.Value, config *config.InmemoryC
 
 func (c *BaseConfig) fresh() {
 	configList := config.GetEnvInstance().Configuration()
-	for element := configList.Front(); element != nil; element = element.Next() {
+	for element := configList.Back(); element != nil; element = element.Prev() {
 		cfg := element.Value.(*config.InmemoryConfiguration)
 		c.freshInternalConfig(cfg)
 	}
@@ -285,9 +299,7 @@ func initializeStruct(t reflect.Type, v reflect.Value) {
 				f.Set(reflect.MakeChan(ft.Type, 0))
 			}
 		case reflect.Struct:
-			if f.IsNil() {
-				initializeStruct(ft.Type, f)
-			}
+			initializeStruct(ft.Type, f)
 		case reflect.Ptr:
 			if f.IsNil() {
 				fv := reflect.New(ft.Type.Elem())

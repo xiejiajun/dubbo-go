@@ -27,9 +27,9 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/registry"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/registry"
 )
 
 func TestRestSubscribedURLsSynthesizer_Synthesize(t *testing.T) {
@@ -37,7 +37,7 @@ func TestRestSubscribedURLsSynthesizer_Synthesize(t *testing.T) {
 	subUrl, _ := common.NewURL("rest://127.0.0.1:20000/org.apache.dubbo-go.mockService")
 	instances := []registry.ServiceInstance{
 		&registry.DefaultServiceInstance{
-			Id:          "test1",
+			ID:          "test1",
 			ServiceName: "test1",
 			Host:        "127.0.0.1:80",
 			Port:        80,
@@ -46,7 +46,7 @@ func TestRestSubscribedURLsSynthesizer_Synthesize(t *testing.T) {
 			Metadata:    nil,
 		},
 		&registry.DefaultServiceInstance{
-			Id:          "test2",
+			ID:          "test2",
 			ServiceName: "test2",
 			Host:        "127.0.0.2:8081",
 			Port:        8081,

@@ -30,15 +30,13 @@ import (
 )
 
 import (
-	"github.com/apache/dubbo-go/common"
-	"github.com/apache/dubbo-go/common/constant"
-	"github.com/apache/dubbo-go/common/logger"
-	"github.com/apache/dubbo-go/config"
+	"dubbo.apache.org/dubbo-go/v3/common"
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/config"
 )
 
-var (
-	clientConf *ClientConfig
-)
+var clientConf *ClientConfig
 
 func init() {
 	// load clientconfig from consumer_config
@@ -80,7 +78,6 @@ func init() {
 			panic(err)
 		}
 	}
-
 }
 
 // Client is gRPC client include client connection and invoker
@@ -90,20 +87,33 @@ type Client struct {
 }
 
 // NewClient creates a new gRPC client.
-func NewClient(url *common.URL) *Client {
-	// if global trace instance was set , it means trace function enabled. If not , will return Nooptracer
+func NewClient(url *common.URL) (*Client, error) {
+	// If global trace instance was set, it means trace function enabled.
+	// If not, will return NoopTracer.
 	tracer := opentracing.GlobalTracer()
 	dialOpts := make([]grpc.DialOption, 0, 4)
 	maxMessageSize, _ := strconv.Atoi(url.GetParam(constant.MESSAGE_SIZE_KEY, "4"))
-	dialOpts = append(dialOpts, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithUnaryInterceptor(
-		otgrpc.OpenTracingClientInterceptor(tracer, otgrpc.LogPayloads())),
+
+	// consumer config client connectTimeout
+	connectTimeout := config.GetConsumerConfig().ConnectTimeout
+
+	dialOpts = append(dialOpts,
+		grpc.WithInsecure(),
+		grpc.WithBlock(),
+		grpc.WithTimeout(connectTimeout),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(tracer, otgrpc.LogPayloads())),
+		grpc.WithStreamInterceptor(otgrpc.OpenTracingStreamClientInterceptor(tracer, otgrpc.LogPayloads())),
 		grpc.WithDefaultCallOptions(
 			grpc.CallContentSubtype(clientConf.ContentSubType),
 			grpc.MaxCallRecvMsgSize(1024*1024*maxMessageSize),
-			grpc.MaxCallSendMsgSize(1024*1024*maxMessageSize)))
+			grpc.MaxCallSendMsgSize(1024*1024*maxMessageSize),
+		),
+	)
+
 	conn, err := grpc.Dial(url.Location, dialOpts...)
 	if err != nil {
-		panic(err)
+		logger.Errorf("grpc dial error: %v", err)
+		return nil, err
 	}
 
 	key := url.GetParam(constant.BEAN_NAME_KEY, "")
@@ -113,7 +123,7 @@ func NewClient(url *common.URL) *Client {
 	return &Client{
 		ClientConn: conn,
 		invoker:    reflect.ValueOf(invoker),
-	}
+	}, nil
 }
 
 func getInvoker(impl interface{}, conn *grpc.ClientConn) interface{} {
